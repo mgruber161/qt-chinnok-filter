@@ -1,0 +1,33 @@
+﻿<Window x:Class="QTChinnok.WpfApp.GenreWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QTChinnok.WpfApp"
+        xmlns:vm="clr-namespace:QTChinnok.WpfApp.ViewModels"
+        mc:Ignorable="d"
+        Title="Genre" Height="200" Width="600">
+    <Window.DataContext>
+        <vm:GenreViewModel x:Name="ViewModel"></vm:GenreViewModel>
+    </Window.DataContext>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition Height="45"></RowDefinition>
+            <RowDefinition Height="45"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Row="1" Grid.Column="0" Margin="10">Name:</Label>
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="10" Text="{Binding Path=Name}"></TextBox>
+
+        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Width="150" Command="{Binding Path=CommandSave}" Margin="10">Speichern</Button>
+            <Button Width="150" Command="{Binding Path=CommandClose}" Margin="10">Schließen</Button>
+        </StackPanel>
+    </Grid>
+</Window>
