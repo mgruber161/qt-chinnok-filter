@@ -36,9 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\QTChinnok.Logic\QTChinnok.Logic.csproj">
-      <ReferenceSourceTarget></ReferenceSourceTarget>
-    </ProjectReference>
+    <ProjectReference Include="..\QTChinnok.Logic\QTChinnok.Logic.csproj" />
   </ItemGroup>
 
 </Project>

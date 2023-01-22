@@ -50,7 +50,32 @@
                 </StackPanel>
             </TabItem>
             <TabItem Header="MediaType(s)">
-
+            </TabItem>
+            <TabItem Header="Album(s)">
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal" Margin="10">
+                        <Label>Filter:</Label>
+                        <TextBox Width="250" Text="{Binding Path=AlbumFilter, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                        <Button Width="50" Command="{Binding Path=CommandAddAlbum}" Background="Transparent" Foreground="Green" Margin="10 0 0 0">+</Button>
+                        <Button Width="100" Command="{Binding Path=CommandEditAlbum}" Margin="10 0 0 0">Bearbeiten</Button>
+                        <Button Width="100" Command="{Binding Path=CommandDeleteAlbum}" Background="Transparent" Foreground="Red" Margin="10 0 0 0">Löschen</Button>
+                    </StackPanel>
+                    <DataGrid ItemsSource="{Binding Path=Albums}"
+                              SelectedItem="{Binding Path=SelectedAlbum}"
+                              Height="200"
+                              AutoGenerateColumns="False"
+                              CanUserAddRows="False"
+                              CanUserDeleteRows="False"
+                              IsReadOnly="True"
+                              SelectionMode="Single"
+                              ScrollViewer.CanContentScroll="True"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Artist" Width="150" Binding="{Binding Path=ArtistName}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Title" Width="*" Binding="{Binding Path=Title}"></DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
             </TabItem>
         </TabControl>
     </Grid>

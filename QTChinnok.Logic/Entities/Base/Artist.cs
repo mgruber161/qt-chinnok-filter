@@ -1,4 +1,6 @@
 ﻿
+using QTChinnok.Logic.Entities.App;
+
 namespace QTChinnok.Logic.Entities.Base
 {
     [Table("artists")]
@@ -10,5 +12,8 @@ namespace QTChinnok.Logic.Entities.Base
         [MaxLength(120)]
         public string? Name { get; set; }
 
+        #region navigation properties
+        public List<Album> Albums { get; set; } = new();
+        #endregion  navigation properties
     }
 }

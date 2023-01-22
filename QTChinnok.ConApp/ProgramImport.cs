@@ -4,7 +4,6 @@
     {
         static partial void AfterRun()
         {
-            
         }
     }
 }

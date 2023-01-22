@@ -3,7 +3,7 @@
     using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Input;
-    using TGenre = Logic.Models.Base.Genre;
+    using TGenre = Models.Genre;
 
     public class GenreViewModel : BaseViewModel
     {
@@ -32,7 +32,7 @@
         public string? Name
         {
             get => Model.Name;
-            set => Model.Name = value;
+            set => Model.Name = value ?? string.Empty;
         }
         public ICommand CommandSave => RelayCommand.CreateCommand(ref _cmdSave, p => Save());
         public ICommand CommandClose => RelayCommand.CreateCommand(ref _cmdClose, p => Window?.Close());
@@ -47,13 +47,16 @@
 
                 try
                 {
+                    var entity = ctrl.Create();
+
+                    entity.CopyFrom(Model);
                     if (Model.Id == 0)
                     {
-                        await ctrl.InsertAsync(Model).ConfigureAwait(false);
+                        await ctrl.InsertAsync(entity).ConfigureAwait(false);
                     }
                     else
                     {
-                        await ctrl.UpdateAsync(Model).ConfigureAwait(false);
+                        await ctrl.UpdateAsync(entity).ConfigureAwait(false);
                     }
                     await ctrl.SaveChangesAsync().ConfigureAwait(false);
                 }
