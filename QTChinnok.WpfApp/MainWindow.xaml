@@ -50,6 +50,29 @@
                 </StackPanel>
             </TabItem>
             <TabItem Header="MediaType(s)">
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal" Margin="10">
+                        <Label>Filter:</Label>
+                        <TextBox Width="250" Text="{Binding Path=MediaTypeFilter, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                        <Button Width="50" Command="{Binding Path=CommandAddMediaType}" Background="Transparent" Foreground="Green" Margin="10 0 0 0">+</Button>
+                        <Button Width="100" Command="{Binding Path=CommandEditMediaType}" Margin="10 0 0 0">Bearbeiten</Button>
+                        <Button Width="100" Command="{Binding Path=CommandDeleteMediaType}" Background="Transparent" Foreground="Red" Margin="10 0 0 0">Löschen</Button>
+                    </StackPanel>
+                    <DataGrid ItemsSource="{Binding Path=MediaTypes}"
+                              SelectedItem="{Binding Path=SelectedMediaType}"
+                              Height="200"
+                              AutoGenerateColumns="False"
+                              CanUserAddRows="False"
+                              CanUserDeleteRows="False"
+                              IsReadOnly="True"
+                              SelectionMode="Single"
+                              ScrollViewer.CanContentScroll="True"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="*" Header="Name" Binding="{Binding Path=Name}"></DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
             </TabItem>
             <TabItem Header="Album(s)">
                 <StackPanel Orientation="Vertical">

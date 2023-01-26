@@ -14,6 +14,7 @@ namespace QTChinnok.Logic.Entities.App
 
         #region navigation properties
         public Artist? Artist { get; set; }
+        public List<MusicCollection> MusicCollections { get; set; } = new();
         #endregion  navigation properties
     }
 }

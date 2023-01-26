@@ -11,6 +11,7 @@ using System.Windows.Input;
 namespace QTChinnok.WpfApp.ViewModels
 {
     using TGenre = Models.Genre;
+    using TMediaType = Models.MediaType;
     using TAlbum = Models.Album;
     public partial class MainViewModel : BaseViewModel
     {
@@ -19,21 +20,26 @@ namespace QTChinnok.WpfApp.ViewModels
         private ICommand? _cmdEditGenre;
         private ICommand? _cmdDeleteGenre;
 
+        private ICommand? _cmdAddMediaType;
+        private ICommand? _cmdEditMediaType;
+        private ICommand? _cmdDeleteMediaType;
+
         private ICommand? _cmdAddAlbum;
         private ICommand? _cmdEditAlbum;
         private ICommand? _cmdDeleteAlbum;
 
         private string genreFilter = string.Empty;
+        private string mediaTypeFilter = string.Empty;
         private string albumFilter = string.Empty;
         private List<TGenre> _genres = new();
+        private List<TMediaType> _mediaTypes = new();
         private List<TAlbum> _albums = new();
-        private TAlbum? _selectedAlbum;
-        private TGenre? _selectedGenre;
         #endregion fields
 
         #region properties
         public TGenre[] Genres => _genres.ToArray();
         public TAlbum[] Albums => _albums.ToArray();
+        public TMediaType[] MediaTypes => _mediaTypes.ToArray();
         public string GenreFilter
         {
             get => genreFilter;
@@ -41,6 +47,15 @@ namespace QTChinnok.WpfApp.ViewModels
             {
                 genreFilter = value;
                 OnPropertyChanged(nameof(Genres));
+            }
+        }
+        public string MediaTypeFilter
+        {
+            get => mediaTypeFilter;
+            set
+            {
+                mediaTypeFilter = value;
+                OnPropertyChanged(nameof(MediaTypes));
             }
         }
         public string AlbumFilter
@@ -52,28 +67,17 @@ namespace QTChinnok.WpfApp.ViewModels
                 OnPropertyChanged(nameof(Albums));
             }
         }
-        public TGenre? SelectedGenre
-        {
-            get => _selectedGenre;
-            set
-            {
-                _selectedGenre = value;
-                System.Diagnostics.Debug.WriteLine($"Selected-Genre: {_selectedGenre?.Name}");
-            }
-        }
-        public TAlbum? SelectedAlbum
-        {
-            get => _selectedAlbum;
-            set
-            {
-                _selectedAlbum = value;
-                System.Diagnostics.Debug.WriteLine($"Selected-Album: {_selectedAlbum?.Title}");
-            }
-        }
+        public TGenre? SelectedGenre { get; set; }
+        public TMediaType? SelectedMediaType { get; set; }
+        public TAlbum? SelectedAlbum { get; set; }
 
         public ICommand CommandAddGenre => RelayCommand.CreateCommand(ref _cmdAddGenre, p => AddGenre());
         public ICommand CommandEditGenre => RelayCommand.CreateCommand(ref _cmdEditGenre, p => EditGenre(), p => SelectedGenre != null);
         public ICommand CommandDeleteGenre => RelayCommand.CreateCommand(ref _cmdDeleteGenre, p => DeleteGenre(), p => SelectedGenre != null);
+
+        public ICommand CommandAddMediaType => RelayCommand.CreateCommand(ref _cmdAddMediaType, p => AddMediaType());
+        public ICommand CommandEditMediaType => RelayCommand.CreateCommand(ref _cmdEditMediaType, p => EditMediaType(), p => SelectedMediaType != null);
+        public ICommand CommandDeleteMediaType => RelayCommand.CreateCommand(ref _cmdDeleteMediaType, p => DeleteMediaType(), p => SelectedMediaType != null);
 
         public ICommand CommandAddAlbum => RelayCommand.CreateCommand(ref _cmdAddAlbum, p => AddAlbum());
         public ICommand CommandEditAlbum => RelayCommand.CreateCommand(ref _cmdEditAlbum, p => EditAlbum(), p => SelectedAlbum != null);
@@ -84,6 +88,7 @@ namespace QTChinnok.WpfApp.ViewModels
         public MainViewModel()
         {
             OnPropertyChanged(nameof(Genres));
+            OnPropertyChanged(nameof(MediaTypes));
             OnPropertyChanged(nameof(Albums));
         }
         protected override void OnPropertyChanged(string propertyName)
@@ -91,6 +96,10 @@ namespace QTChinnok.WpfApp.ViewModels
             if (propertyName == nameof(Genres))
             {
                 Task.Run(LoadGenresAsync);
+            }
+            else if (propertyName == nameof(MediaTypes))
+            {
+                Task.Run(LoadMediaTypesAsync);
             }
             else if (propertyName == nameof(Albums))
             {
@@ -151,6 +160,16 @@ namespace QTChinnok.WpfApp.ViewModels
                     OnPropertyChanged(nameof(Genres));
                 }
             }
+        }
+
+        private void AddMediaType()
+        {
+        }
+        private void EditMediaType()
+        {
+        }
+        private void DeleteMediaType()
+        {
         }
 
         private void AddAlbum()
@@ -215,6 +234,18 @@ namespace QTChinnok.WpfApp.ViewModels
             SelectedGenre = null;
             base.OnPropertyChanged(nameof(SelectedGenre));
             base.OnPropertyChanged(nameof(Genres));
+        }
+        private async Task LoadMediaTypesAsync()
+        {
+            using var ctrl = new Logic.Controllers.Base.MediaTypesController();
+            var items = await ctrl.GetAllAsync().ConfigureAwait(false);
+            var result = items.Where(i => i.Name != null && i.Name.Contains(mediaTypeFilter, System.StringComparison.CurrentCultureIgnoreCase));
+
+            _mediaTypes.Clear();
+            _mediaTypes.AddRange(result.Select(i => new TMediaType(i)));
+            SelectedMediaType = null;
+            base.OnPropertyChanged(nameof(SelectedMediaType));
+            base.OnPropertyChanged(nameof(MediaTypes));
         }
         private async Task LoadAlbumsAsync()
         {
