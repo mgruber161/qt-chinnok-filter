@@ -100,6 +100,30 @@
                     </DataGrid>
                 </StackPanel>
             </TabItem>
+            <TabItem Header="Track(s)">
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal" Margin="10">
+                        <Label>Filter:</Label>
+                        <TextBox Width="250" Text="{Binding Path=TrackFilter, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                        <Button Width="50" Command="{Binding Path=CommandAddTrack}" Background="Transparent" Foreground="Green" Margin="10 0 0 0">+</Button>
+                    </StackPanel>
+                    <DataGrid ItemsSource="{Binding Path=Tracks}"
+                              SelectedItem="{Binding Path=SelectedTrack}"
+                              Height="200"
+                              AutoGenerateColumns="False"
+                              CanUserAddRows="False"
+                              CanUserDeleteRows="False"
+                              IsReadOnly="True"
+                              SelectionMode="Single"
+                              ScrollViewer.CanContentScroll="True"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Interpret" Binding="{Binding Path=Composer}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Name" Binding="{Binding Path=Name}"></DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>

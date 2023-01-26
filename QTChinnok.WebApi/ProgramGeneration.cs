@@ -13,6 +13,7 @@ namespace QTChinnok.WebApi
             builder.Services.AddTransient<QTChinnok.Logic.Contracts.Base.IMediaTypesAccess<QTChinnok.Logic.Models.Base.MediaType>, QTChinnok.Logic.Controllers.Base.MediaTypesController>();
             builder.Services.AddTransient<QTChinnok.Logic.Contracts.App.IAlbumsAccess<QTChinnok.Logic.Models.App.Album>, QTChinnok.Logic.Controllers.App.AlbumsController>();
             builder.Services.AddTransient<QTChinnok.Logic.Contracts.App.IMusicCollectionsAccess<QTChinnok.Logic.Models.App.MusicCollection>, QTChinnok.Logic.Controllers.App.MusicCollectionsController>();
+            builder.Services.AddTransient<QTChinnok.Logic.Contracts.App.ITracksAccess<QTChinnok.Logic.Models.App.Track>, QTChinnok.Logic.Controllers.App.TracksController>();
         }
     }
 }

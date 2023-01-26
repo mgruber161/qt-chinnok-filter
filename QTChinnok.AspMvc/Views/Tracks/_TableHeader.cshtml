@@ -1,0 +1,80 @@
+﻿@*@GeneratedCode*@
+@model IEnumerable<QTChinnok.AspMvc.Models.App.Track>
+@{
+  var orderBy = (string)ViewBag.OrderBy ?? string.Empty;
+}
+<thead>
+ <tr>
+  <th>
+   @if (orderBy.StartsWith("AlbumId") && orderBy.EndsWith("ASC"))
+    {
+     <a asp-action="OrderBy" asp-route-orderBy="AlbumId DESC" class="btn btn-outline"><strong>AlbumId</strong> <i class="fa fa-sort-desc"></i></a>
+    }
+   else if (orderBy.StartsWith("AlbumId") && orderBy.EndsWith("DESC"))
+    {
+     <a asp-action="OrderBy" asp-route-orderBy="" class="btn btn-outline"><strong>AlbumId</strong> <i class="fa fa-sort-asc"></i></a>
+    }
+   else
+    {
+     <a asp-action="OrderBy" asp-route-orderBy="AlbumId ASC" class="btn btn-outline"><strong>AlbumId</strong></a>
+    }
+  </th>
+  <th>
+   @if (orderBy.StartsWith("GenreId") && orderBy.EndsWith("ASC"))
+    {
+     <a asp-action="OrderBy" asp-route-orderBy="GenreId DESC" class="btn btn-outline"><strong>GenreId</strong> <i class="fa fa-sort-desc"></i></a>
+    }
+   else if (orderBy.StartsWith("GenreId") && orderBy.EndsWith("DESC"))
+    {
+     <a asp-action="OrderBy" asp-route-orderBy="" class="btn btn-outline"><strong>GenreId</strong> <i class="fa fa-sort-asc"></i></a>
+    }
+   else
+    {
+     <a asp-action="OrderBy" asp-route-orderBy="GenreId ASC" class="btn btn-outline"><strong>GenreId</strong></a>
+    }
+  </th>
+  <th>
+   @if (orderBy.StartsWith("MediaTypeId") && orderBy.EndsWith("ASC"))
+    {
+     <a asp-action="OrderBy" asp-route-orderBy="MediaTypeId DESC" class="btn btn-outline"><strong>MediaTypeId</strong> <i class="fa fa-sort-desc"></i></a>
+    }
+   else if (orderBy.StartsWith("MediaTypeId") && orderBy.EndsWith("DESC"))
+    {
+     <a asp-action="OrderBy" asp-route-orderBy="" class="btn btn-outline"><strong>MediaTypeId</strong> <i class="fa fa-sort-asc"></i></a>
+    }
+   else
+    {
+     <a asp-action="OrderBy" asp-route-orderBy="MediaTypeId ASC" class="btn btn-outline"><strong>MediaTypeId</strong></a>
+    }
+  </th>
+  <th>
+   @if (orderBy.StartsWith("Name") && orderBy.EndsWith("ASC"))
+    {
+     <a asp-action="OrderBy" asp-route-orderBy="Name DESC" class="btn btn-outline"><strong>Name</strong> <i class="fa fa-sort-desc"></i></a>
+    }
+   else if (orderBy.StartsWith("Name") && orderBy.EndsWith("DESC"))
+    {
+     <a asp-action="OrderBy" asp-route-orderBy="" class="btn btn-outline"><strong>Name</strong> <i class="fa fa-sort-asc"></i></a>
+    }
+   else
+    {
+     <a asp-action="OrderBy" asp-route-orderBy="Name ASC" class="btn btn-outline"><strong>Name</strong></a>
+    }
+  </th>
+  <th>
+   @if (orderBy.StartsWith("Composer") && orderBy.EndsWith("ASC"))
+    {
+     <a asp-action="OrderBy" asp-route-orderBy="Composer DESC" class="btn btn-outline"><strong>Composer</strong> <i class="fa fa-sort-desc"></i></a>
+    }
+   else if (orderBy.StartsWith("Composer") && orderBy.EndsWith("DESC"))
+    {
+     <a asp-action="OrderBy" asp-route-orderBy="" class="btn btn-outline"><strong>Composer</strong> <i class="fa fa-sort-asc"></i></a>
+    }
+   else
+    {
+     <a asp-action="OrderBy" asp-route-orderBy="Composer ASC" class="btn btn-outline"><strong>Composer</strong></a>
+    }
+  </th>
+  <th></th>
+ </tr>
+</thead>

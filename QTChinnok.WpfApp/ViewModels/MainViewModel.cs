@@ -1,5 +1,6 @@
 ﻿//@CustumCode
 //MdStart
+using QTChinnok.Logic.Entities.App;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace QTChinnok.WpfApp.ViewModels
     using TGenre = Models.Genre;
     using TMediaType = Models.MediaType;
     using TAlbum = Models.Album;
+    using TTrack = Models.Track;
     public partial class MainViewModel : BaseViewModel
     {
         #region fields
@@ -28,18 +30,30 @@ namespace QTChinnok.WpfApp.ViewModels
         private ICommand? _cmdEditAlbum;
         private ICommand? _cmdDeleteAlbum;
 
+        private ICommand? _cmdAddTrack;
+        private ICommand? _cmdEditTrack;
+        private ICommand? _cmdDeleteTrack;
+
         private string genreFilter = string.Empty;
         private string mediaTypeFilter = string.Empty;
         private string albumFilter = string.Empty;
+        private string trackFilter = string.Empty;
+        private string musicCollectionFilter = string.Empty;
+
         private List<TGenre> _genres = new();
         private List<TMediaType> _mediaTypes = new();
         private List<TAlbum> _albums = new();
+        private List<TTrack> _tracks = new();
+
+        private List<MusicCollection> _musicCollections = new();
         #endregion fields
 
         #region properties
         public TGenre[] Genres => _genres.ToArray();
         public TAlbum[] Albums => _albums.ToArray();
+        public TTrack[] Tracks => _tracks.ToArray();
         public TMediaType[] MediaTypes => _mediaTypes.ToArray();
+
         public string GenreFilter
         {
             get => genreFilter;
@@ -67,9 +81,20 @@ namespace QTChinnok.WpfApp.ViewModels
                 OnPropertyChanged(nameof(Albums));
             }
         }
+        public string TrackFilter
+        {
+            get => trackFilter;
+            set
+            {
+                trackFilter = value;
+                OnPropertyChanged(nameof(Tracks));
+            }
+        }
+
         public TGenre? SelectedGenre { get; set; }
         public TMediaType? SelectedMediaType { get; set; }
         public TAlbum? SelectedAlbum { get; set; }
+        public TTrack? SelectedTrack { get; set; }
 
         public ICommand CommandAddGenre => RelayCommand.CreateCommand(ref _cmdAddGenre, p => AddGenre());
         public ICommand CommandEditGenre => RelayCommand.CreateCommand(ref _cmdEditGenre, p => EditGenre(), p => SelectedGenre != null);
@@ -83,6 +108,7 @@ namespace QTChinnok.WpfApp.ViewModels
         public ICommand CommandEditAlbum => RelayCommand.CreateCommand(ref _cmdEditAlbum, p => EditAlbum(), p => SelectedAlbum != null);
         public ICommand CommandDeleteAlbum => RelayCommand.CreateCommand(ref _cmdDeleteAlbum, p => DeleteAlbum(), p => SelectedAlbum != null);
 
+        public ICommand CommandAddTrack => RelayCommand.CreateCommand(ref _cmdAddTrack, p => AddTrack());
         #endregion properties
 
         public MainViewModel()
@@ -90,6 +116,7 @@ namespace QTChinnok.WpfApp.ViewModels
             OnPropertyChanged(nameof(Genres));
             OnPropertyChanged(nameof(MediaTypes));
             OnPropertyChanged(nameof(Albums));
+            OnPropertyChanged(nameof(Tracks));
         }
         protected override void OnPropertyChanged(string propertyName)
         {
@@ -104,6 +131,10 @@ namespace QTChinnok.WpfApp.ViewModels
             else if (propertyName == nameof(Albums))
             {
                 Task.Run(LoadAlbumsAsync);
+            }
+            else if (propertyName == nameof(Tracks))
+            {
+                Task.Run(LoadTracksAsync);
             }
             else
             {
@@ -223,6 +254,14 @@ namespace QTChinnok.WpfApp.ViewModels
             }
         }
 
+        private void AddTrack()
+        {
+            TrackWindow window = new();
+
+            window.ShowDialog();
+            OnPropertyChanged(nameof(Tracks));
+        }
+
         private async Task LoadGenresAsync()
         {
             using var ctrl = new Logic.Controllers.Base.GenresController();
@@ -259,6 +298,18 @@ namespace QTChinnok.WpfApp.ViewModels
             SelectedAlbum = null;
             base.OnPropertyChanged(nameof(SelectedAlbum));
             base.OnPropertyChanged(nameof(Albums));
+        }
+        private async Task LoadTracksAsync()
+        {
+            using var ctrl = new Logic.Controllers.App.TracksController();
+            var items = await ctrl.GetAllAsync().ConfigureAwait(false);
+            var result = items.Where(i => i.Name.Contains(trackFilter, System.StringComparison.CurrentCultureIgnoreCase));
+
+            _tracks.Clear();
+            _tracks.AddRange(result.Select(i => new TTrack(i)));
+            SelectedTrack = null;
+            base.OnPropertyChanged(nameof(SelectedTrack));
+            base.OnPropertyChanged(nameof(Tracks));
         }
     }
 }

@@ -67,8 +67,13 @@ namespace QTChinnok.WpfApp.ViewModels
             var items = await ctrl.GetAllAsync().ConfigureAwait(false);
 
             _artists.Clear();
-            _artists.AddRange(items.OrderBy(i => i.Name).Select(i => new TArtist(i)).ToArray());
+            _artists.AddRange(items.OrderBy(i => i.Name)
+                                   .Select(i => new TArtist(i)));
 
+            if (ArtistId == 0 && _artists.Any())
+            {
+                ArtistId = _artists.First().Id;
+            }
             base.OnPropertyChanged(nameof(ArtistList));
             base.OnPropertyChanged(nameof(ArtistId));
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if GENERATEDCODE_ON
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,3 +12,4 @@ namespace QTChinnok.Logic.Controllers.Base
         internal override IEnumerable<string> Includes => new string[] { nameof(Entities.Base.Artist.Albums) };
     }
 }
+#endif

@@ -9,6 +9,7 @@ namespace QTChinnok.WpfApp.ViewModels
 
     public abstract partial class EntityViewModel<T> : BaseViewModel
         where T : Logic.Contracts.IIdentifyable, new()
+
     {
         #region fields
         private ICommand? cmdSave = null;
