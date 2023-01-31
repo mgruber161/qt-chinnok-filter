@@ -1,7 +1,7 @@
-﻿<Application x:Class="QTChinnok.WpfApp.App"
+﻿<Application x:Class="QTChinnok.MvvMApp.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:QTChinnok.WpfApp"
+             xmlns:local="clr-namespace:QTChinnok.MvvMApp"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          

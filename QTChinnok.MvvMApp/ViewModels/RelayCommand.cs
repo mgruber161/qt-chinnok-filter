@@ -9,22 +9,13 @@ namespace QTChinnok.MvvMApp.ViewModels
     {
         private readonly Action<object?> execute;
         private readonly Predicate<object?>? canExecute;
+
+        public event EventHandler? CanExecuteChanged;
+
         private RelayCommand(Action<object?> execute, Predicate<object?>? canExecute)
         {
             this.execute = execute ?? throw new ArgumentNullException(nameof(execute));
             this.canExecute = canExecute;
-        }
-
-        public event EventHandler? CanExecuteChanged
-        {
-            add
-            {
-                CommandManager.RequerySuggested += value;
-            }
-            remove
-            {
-                CommandManager.RequerySuggested -= value;
-            }
         }
 
         public bool CanExecute(object? parameter)
@@ -38,11 +29,11 @@ namespace QTChinnok.MvvMApp.ViewModels
         }
 
         #region Factory mothods
-        public static ICommand CreateCommand(ref ICommand? command, Action<object?> execute)
+        public static ICommand Create(ref ICommand? command, Action<object?> execute)
         {
-            return CreateCommand(ref command, execute, null);
+            return Create(ref command, execute, null);
         }
-        public static ICommand CreateCommand(ref ICommand? command, Action<object?> execute, Predicate<object?>? canExecute)
+        public static ICommand Create(ref ICommand? command, Action<object?> execute, Predicate<object?>? canExecute)
         {
             if (command == null)
             {

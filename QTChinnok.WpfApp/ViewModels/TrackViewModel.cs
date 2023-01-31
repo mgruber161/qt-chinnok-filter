@@ -1,11 +1,11 @@
-﻿using QTChinnok.WpfApp.Models;
+﻿using QTChinnok.MvvMApp.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace QTChinnok.WpfApp.ViewModels
+namespace QTChinnok.MvvMApp.ViewModels
 {
     using TMediaType = Models.MediaType;
     using TTrack = Models.Track;

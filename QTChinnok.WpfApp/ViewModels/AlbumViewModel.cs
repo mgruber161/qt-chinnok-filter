@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace QTChinnok.WpfApp.ViewModels
+namespace QTChinnok.MvvMApp.ViewModels
 {
     using TAlbum = Models.Album;
     using TArtist = Models.Artist;
@@ -67,13 +67,8 @@ namespace QTChinnok.WpfApp.ViewModels
             var items = await ctrl.GetAllAsync().ConfigureAwait(false);
 
             _artists.Clear();
-            _artists.AddRange(items.OrderBy(i => i.Name)
-                                   .Select(i => new TArtist(i)));
+            _artists.AddRange(items.OrderBy(i => i.Name).Select(i => new TArtist(i)).ToArray());
 
-            if (ArtistId == 0 && _artists.Any())
-            {
-                ArtistId = _artists.First().Id;
-            }
             base.OnPropertyChanged(nameof(ArtistList));
             base.OnPropertyChanged(nameof(ArtistId));
         }

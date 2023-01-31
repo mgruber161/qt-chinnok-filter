@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace QTChinnok.WpfApp
+namespace QTChinnok.MvvMApp
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

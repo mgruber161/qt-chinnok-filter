@@ -1,6 +1,6 @@
 ﻿//@CodeCopy
 //MdStart
-namespace QTChinnok.WpfApp.ViewModels
+namespace QTChinnok.MvvMApp.ViewModels
 {
     using System;
     using System.Threading.Tasks;
@@ -9,7 +9,6 @@ namespace QTChinnok.WpfApp.ViewModels
 
     public abstract partial class EntityViewModel<T> : BaseViewModel
         where T : Logic.Contracts.IIdentifyable, new()
-
     {
         #region fields
         private ICommand? cmdSave = null;

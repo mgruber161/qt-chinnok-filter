@@ -3,7 +3,7 @@
 using System.ComponentModel;
 using System.Windows;
 
-namespace QTChinnok.WpfApp.ViewModels
+namespace QTChinnok.MvvMApp.ViewModels
 {
     public abstract partial class BaseViewModel : INotifyPropertyChanged
     {
