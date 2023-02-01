@@ -7,39 +7,39 @@ namespace QTChinnok.MvvMApp.ViewModels
 {
     public partial class RelayCommand : ICommand
     {
-        private readonly Action<object?> execute;
-        private readonly Predicate<object?>? canExecute;
-
-        public event EventHandler? CanExecuteChanged;
-
+        private readonly Action<object?> _execute;
+        private readonly Predicate<object?>? _canExecute;
+        
         private RelayCommand(Action<object?> execute, Predicate<object?>? canExecute)
         {
-            this.execute = execute ?? throw new ArgumentNullException(nameof(execute));
-            this.canExecute = canExecute;
+            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
+            _canExecute = canExecute;
         }
 
         public bool CanExecute(object? parameter)
         {
-            return canExecute == null || canExecute(parameter);
+            return _canExecute == null || _canExecute(parameter);
         }
 
         public void Execute(object? parameter)
         {
-            execute(parameter);
+            _execute(parameter);
         }
+        public event EventHandler? CanExecuteChanged;
 
-        #region Factory mothods
-        public static ICommand Create(ref ICommand? command, Action<object?> execute)
+        public void RaiseCanExecuteChanged()
         {
-            return Create(ref command, execute, null);
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
-        public static ICommand Create(ref ICommand? command, Action<object?> execute, Predicate<object?>? canExecute)
+        
+        #region Factory mothods
+        public static ICommand Create(Action<object?> execute)
         {
-            if (command == null)
-            {
-                command = new RelayCommand(execute, canExecute);
-            }
-            return command;
+            return Create(execute, p => true);
+        }
+        public static ICommand Create(Action<object?> execute, Predicate<object?>? canExecute)
+        {
+            return new RelayCommand(execute, canExecute);
         }
         #endregion Factory methods
     }

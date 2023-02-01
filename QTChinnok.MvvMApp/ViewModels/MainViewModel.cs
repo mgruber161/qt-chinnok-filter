@@ -1,14 +1,11 @@
 ﻿//@CodeCopy
 //MdStart
-using Avalonia.FreeDesktop.DBusIme;
-using ReactiveUI;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using ReactiveUI;
 
 namespace QTChinnok.MvvMApp.ViewModels
 {
@@ -19,22 +16,6 @@ namespace QTChinnok.MvvMApp.ViewModels
     public class MainViewModel : BaseViewModel
     {
         #region fields
-        private ICommand? _cmdAddGenre;
-        private ICommand? _cmdEditGenre;
-        private ICommand? _cmdDeleteGenre;
-
-        private ICommand? _cmdAddMediaType;
-        private ICommand? _cmdEditMediaType;
-        private ICommand? _cmdDeleteMediaType;
-
-        private ICommand? _cmdAddAlbum;
-        private ICommand? _cmdEditAlbum;
-        private ICommand? _cmdDeleteAlbum;
-
-        private ICommand? _cmdAddTrack;
-        private ICommand? _cmdEditTrack;
-        private ICommand? _cmdDeleteTrack;
-
         private string genreFilter = string.Empty;
         private string mediaTypeFilter = string.Empty;
         private string albumFilter = string.Empty;
@@ -45,6 +26,11 @@ namespace QTChinnok.MvvMApp.ViewModels
         private List<TMediaType> _mediaTypes = new();
         private List<TAlbum> _albums = new();
         private List<TTrack> _tracks = new();
+        private TGenre? _selectedGenre;
+        private TMediaType? _selectedMediaType;
+        private TAlbum? _selectedAlbum;
+        private TTrack? _selectedTrack;
+
         #endregion fields
 
         #region properties
@@ -90,36 +76,66 @@ namespace QTChinnok.MvvMApp.ViewModels
             }
         }
 
-        public TGenre? SelectedGenre { get; set; }
-        public TMediaType? SelectedMediaType { get; set; }
-        public TAlbum? SelectedAlbum { get; set; }
-        public TTrack? SelectedTrack { get; set; }
+        public TGenre? SelectedGenre
+        {
+            get => _selectedGenre;
+            set
+            {
+                _selectedGenre = value;
+                OnPropertyChanged(nameof(CommandEditGenre));
+                OnPropertyChanged(nameof(CommandDeleteGenre));
+             }
+        }
+
+        public TMediaType? SelectedMediaType
+        {
+            get => _selectedMediaType;
+            set
+            {
+                _selectedMediaType = value;
+                OnPropertyChanged(nameof(CommandEditMediaType));
+                OnPropertyChanged(nameof(CommandDeleteMediaType));
+            }
+        }
+
+        public TAlbum? SelectedAlbum
+        {
+            get => _selectedAlbum;
+            set
+            {
+                _selectedAlbum = value;
+                OnPropertyChanged(nameof(CommandEditAlbum));
+                OnPropertyChanged(nameof(CommandDeleteAlbum));
+            }
+        }
+
+        public TTrack? SelectedTrack
+        {
+            get => _selectedTrack;
+            set
+            {
+                _selectedTrack = value;
+//                OnPropertyChanged(nameof(CommandEditTrack));
+//                OnPropertyChanged(nameof(CommandDeleteTrack));
+            }
+        }
+
         #endregion properties
 
         #region commands
-        public void DoEditGenre(object obj)
-        {
+        public ICommand CommandAddGenre => RelayCommand.Create((p) => AddGenre());
+        public ICommand CommandEditGenre => RelayCommand.Create(p  => EditGenre(), p => SelectedGenre != null);
+        public ICommand CommandDeleteGenre => RelayCommand.Create(p => DeleteGenre(), p => SelectedGenre != null);
 
-        }
-        public bool CanDoEditGenre(object parameter)
-        {
-            return SelectedGenre != null;
-        }
-        public ICommand CommandAddGenre => ReactiveCommand.Create(() => AddGenre());
-        //public ICommand CommandAddGenre => RelayCommand.Create(ref _cmdAddGenre, p => AddGenre());
-       // public ICommand CommandEditGenre => ReactiveCommand.Create(() => EditGenre(), this.WhenAnyValue(x => SelectedGenre != null));
-        public ICommand CommandEditGenre => RelayCommand.Create(ref _cmdEditGenre, p => EditGenre(), p => SelectedGenre != null);
-        public ICommand CommandDeleteGenre => RelayCommand.Create(ref _cmdDeleteGenre, p => DeleteGenre(), p => SelectedGenre != null);
+        public ICommand CommandAddMediaType => RelayCommand.Create(p => AddMediaType());
+        public ICommand CommandEditMediaType => RelayCommand.Create(p => EditMediaType(), p => SelectedMediaType != null);
+        public ICommand CommandDeleteMediaType => RelayCommand.Create(p => DeleteMediaType(), p => SelectedMediaType != null);
 
-        public ICommand CommandAddMediaType => RelayCommand.Create(ref _cmdAddMediaType, p => AddMediaType());
-        public ICommand CommandEditMediaType => RelayCommand.Create(ref _cmdEditMediaType, p => EditMediaType(), p => SelectedMediaType != null);
-        public ICommand CommandDeleteMediaType => RelayCommand.Create(ref _cmdDeleteMediaType, p => DeleteMediaType(), p => SelectedMediaType != null);
+        public ICommand CommandAddAlbum => RelayCommand.Create(p => AddAlbum());
+        public ICommand CommandEditAlbum => RelayCommand.Create(p => EditAlbum(), p => SelectedAlbum != null);
+        public ICommand CommandDeleteAlbum => RelayCommand.Create(p => DeleteAlbum(), p => SelectedAlbum != null);
 
-        public ICommand CommandAddAlbum => RelayCommand.Create(ref _cmdAddAlbum, p => AddAlbum());
-        public ICommand CommandEditAlbum => RelayCommand.Create(ref _cmdEditAlbum, p => EditAlbum(), p => SelectedAlbum != null);
-        public ICommand CommandDeleteAlbum => RelayCommand.Create(ref _cmdDeleteAlbum, p => DeleteAlbum(), p => SelectedAlbum != null);
-
-        public ICommand CommandAddTrack => RelayCommand.Create(ref _cmdAddTrack, p => AddTrack());
+        public ICommand CommandAddTrack => RelayCommand.Create(p => AddTrack());
         #endregion commands
 
         public MainViewModel()

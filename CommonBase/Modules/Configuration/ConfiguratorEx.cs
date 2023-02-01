@@ -5,7 +5,7 @@
         static partial void ClassConstructed()
         {
 #if DEBUG && SQLITE_ON
-            Environment.SetEnvironmentVariable("ConnectionStrings:SqliteDefaultConnection", "Data Source=C:\\Users\\ggehr\\source\\repos\\leoggehrer\\Data\\chinook.db");
+            Environment.SetEnvironmentVariable("ConnectionStrings:SqliteDefaultConnection", "Data Source=/Users/ggehrer/Projects/Data/chinook.db");
 #endif
         }
     }
