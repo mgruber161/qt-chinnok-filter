@@ -3,7 +3,7 @@
 using System;
 using System.Windows.Input;
 
-namespace QTChinnok.MvvMApp.ViewModels
+namespace QTChinnok.WpfApp.ViewModels
 {
     public partial class RelayCommand : ICommand
     {

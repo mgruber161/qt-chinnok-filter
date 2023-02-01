@@ -1,4 +1,4 @@
-﻿namespace QTChinnok.MvvMApp.Models
+﻿namespace QTChinnok.WpfApp.Models
 {
     public class Artist
     {

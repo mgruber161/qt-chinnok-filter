@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QTChinnok.MvvMApp.Models
+namespace QTChinnok.WpfApp.Models
 {
     public class Genre
     {

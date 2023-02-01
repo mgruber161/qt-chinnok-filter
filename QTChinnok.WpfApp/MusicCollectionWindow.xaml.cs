@@ -15,14 +15,13 @@ using System.Windows.Shapes;
 namespace QTChinnok.WpfApp
 {
     /// <summary>
-    /// Interaction logic for ArtistWindow.xaml
+    /// Interaction logic for MusicCollectionWindow.xaml
     /// </summary>
-    public partial class AlbumWindow : Window
+    public partial class MusicCollectionWindow : Window
     {
-        public AlbumWindow()
+        public MusicCollectionWindow()
         {
             InitializeComponent();
-            ViewModel.Window = this;
         }
     }
 }

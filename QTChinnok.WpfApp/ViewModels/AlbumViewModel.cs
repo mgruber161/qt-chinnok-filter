@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace QTChinnok.MvvMApp.ViewModels
+namespace QTChinnok.WpfApp.ViewModels
 {
     using TAlbum = Models.Album;
     using TArtist = Models.Artist;

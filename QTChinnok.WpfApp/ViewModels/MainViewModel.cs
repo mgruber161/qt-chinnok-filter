@@ -9,12 +9,13 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 
-namespace QTChinnok.MvvMApp.ViewModels
+namespace QTChinnok.WpfApp.ViewModels
 {
     using TGenre = Models.Genre;
     using TMediaType = Models.MediaType;
     using TAlbum = Models.Album;
     using TTrack = Models.Track;
+    using TMusicCollection = Models.MusicCollection;
     public partial class MainViewModel : BaseViewModel
     {
         #region fields
@@ -34,6 +35,10 @@ namespace QTChinnok.MvvMApp.ViewModels
         private ICommand? _cmdEditTrack;
         private ICommand? _cmdDeleteTrack;
 
+        private ICommand? _cmdAddMusicCollection;
+        private ICommand? _cmdEditMusicCollection;
+        private ICommand? _cmdDeleteMusicCollection;
+
         private string genreFilter = string.Empty;
         private string mediaTypeFilter = string.Empty;
         private string albumFilter = string.Empty;
@@ -44,8 +49,7 @@ namespace QTChinnok.MvvMApp.ViewModels
         private List<TMediaType> _mediaTypes = new();
         private List<TAlbum> _albums = new();
         private List<TTrack> _tracks = new();
-
-        private List<MusicCollection> _musicCollections = new();
+        private List<TMusicCollection> _musicCollections = new();
         #endregion fields
 
         #region properties
@@ -53,16 +57,8 @@ namespace QTChinnok.MvvMApp.ViewModels
         public TAlbum[] Albums => _albums.ToArray();
         public TTrack[] Tracks => _tracks.ToArray();
         public TMediaType[] MediaTypes => _mediaTypes.ToArray();
+        public TMusicCollection[] MusicCollections => _musicCollections.ToArray();
 
-        public string GenreFilter
-        {
-            get => genreFilter;
-            set
-            {
-                genreFilter = value;
-                OnPropertyChanged(nameof(Genres));
-            }
-        }
         public string MediaTypeFilter
         {
             get => mediaTypeFilter;
@@ -70,6 +66,15 @@ namespace QTChinnok.MvvMApp.ViewModels
             {
                 mediaTypeFilter = value;
                 OnPropertyChanged(nameof(MediaTypes));
+            }
+        }
+        public string GenreFilter
+        {
+            get => genreFilter;
+            set
+            {
+                genreFilter = value;
+                OnPropertyChanged(nameof(Genres));
             }
         }
         public string AlbumFilter
@@ -90,11 +95,21 @@ namespace QTChinnok.MvvMApp.ViewModels
                 OnPropertyChanged(nameof(Tracks));
             }
         }
+        public string MusicCollectionFilter
+        {
+            get => musicCollectionFilter;
+            set
+            {
+                musicCollectionFilter = value;
+                OnPropertyChanged(nameof(MusicCollections));
+            }
+        }
 
-        public TGenre? SelectedGenre { get; set; }
         public TMediaType? SelectedMediaType { get; set; }
+        public TGenre? SelectedGenre { get; set; }
         public TAlbum? SelectedAlbum { get; set; }
         public TTrack? SelectedTrack { get; set; }
+        public TMusicCollection? SelectedMusicCollection { get; set; }
 
         public ICommand CommandAddGenre => RelayCommand.CreateCommand(ref _cmdAddGenre, p => AddGenre());
         public ICommand CommandEditGenre => RelayCommand.CreateCommand(ref _cmdEditGenre, p => EditGenre(), p => SelectedGenre != null);
@@ -109,24 +124,31 @@ namespace QTChinnok.MvvMApp.ViewModels
         public ICommand CommandDeleteAlbum => RelayCommand.CreateCommand(ref _cmdDeleteAlbum, p => DeleteAlbum(), p => SelectedAlbum != null);
 
         public ICommand CommandAddTrack => RelayCommand.CreateCommand(ref _cmdAddTrack, p => AddTrack());
+        public ICommand CommandEditTrack => RelayCommand.CreateCommand(ref _cmdEditTrack, p => EditTrack(), p => SelectedTrack != null);
+        public ICommand CommandDeleteTrack => RelayCommand.CreateCommand(ref _cmdDeleteTrack, p => DeleteTrack(), p => SelectedTrack != null);
+
+        public ICommand CommandAddMusicCollection => RelayCommand.CreateCommand(ref _cmdAddMusicCollection, p => AddMusicCollection());
+        public ICommand CommandEditMusicCollection => RelayCommand.CreateCommand(ref _cmdEditMusicCollection, p => EditMusicCollection(), p => SelectedMusicCollection != null);
+        public ICommand CommandDeleteMusicCollection => RelayCommand.CreateCommand(ref _cmdDeleteMusicCollection, p => DeleteMusicCollection(), p => SelectedMusicCollection != null);
         #endregion properties
 
         public MainViewModel()
         {
-            OnPropertyChanged(nameof(Genres));
             OnPropertyChanged(nameof(MediaTypes));
+            OnPropertyChanged(nameof(Genres));
             OnPropertyChanged(nameof(Albums));
             OnPropertyChanged(nameof(Tracks));
+            OnPropertyChanged(nameof(MusicCollections));
         }
         protected override void OnPropertyChanged(string propertyName)
         {
-            if (propertyName == nameof(Genres))
-            {
-                Task.Run(LoadGenresAsync);
-            }
-            else if (propertyName == nameof(MediaTypes))
+            if (propertyName == nameof(MediaTypes))
             {
                 Task.Run(LoadMediaTypesAsync);
+            }
+            else if (propertyName == nameof(Genres))
+            {
+                Task.Run(LoadGenresAsync);
             }
             else if (propertyName == nameof(Albums))
             {
@@ -135,6 +157,10 @@ namespace QTChinnok.MvvMApp.ViewModels
             else if (propertyName == nameof(Tracks))
             {
                 Task.Run(LoadTracksAsync);
+            }
+            else if (propertyName == nameof(MusicCollections))
+            {
+                Task.Run(LoadMusicCollectionsAsync);
             }
             else
             {
@@ -261,19 +287,101 @@ namespace QTChinnok.MvvMApp.ViewModels
             window.ShowDialog();
             OnPropertyChanged(nameof(Tracks));
         }
-
-        private async Task LoadGenresAsync()
+        private void EditTrack()
         {
-            using var ctrl = new Logic.Controllers.Base.GenresController();
-            var items = await ctrl.GetAllAsync().ConfigureAwait(false);
-            var result = items.Where(i => i.Name != null && i.Name.Contains(genreFilter, System.StringComparison.CurrentCultureIgnoreCase));
+            TrackWindow window = new();
 
-            _genres.Clear();
-            _genres.AddRange(result.Select(i => new TGenre(i)));
-            SelectedGenre = null;
-            base.OnPropertyChanged(nameof(SelectedGenre));
-            base.OnPropertyChanged(nameof(Genres));
+            window.ViewModel.Model = SelectedTrack!;
+            window.ShowDialog();
+            OnPropertyChanged(nameof(Tracks));
         }
+        private void DeleteTrack()
+        {
+            var result = MessageBox.Show($"Soll der Eintrag '{SelectedTrack?.Name}' gelöscht werden", "Löschen", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                bool error = false;
+                string errorMessage = string.Empty;
+
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        using var ctrl = new Logic.Controllers.App.TracksController();
+
+                        await ctrl.DeleteAsync(SelectedTrack!.Id).ConfigureAwait(false);
+                        await ctrl.SaveChangesAsync().ConfigureAwait(false);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        error = true;
+                        errorMessage = ex.Message;
+                    }
+                }).Wait();
+
+                if (error)
+                {
+                    MessageBox.Show(errorMessage, "Löschen", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                else
+                {
+                    OnPropertyChanged(nameof(Tracks));
+                }
+            }
+        }
+
+        private void AddMusicCollection()
+        {
+            MusicCollectionWindow window = new();
+
+            window.ShowDialog();
+            OnPropertyChanged(nameof(MusicCollections));
+        }
+        private void EditMusicCollection()
+        {
+            MusicCollectionWindow window = new();
+
+            window.ViewModel.Model = SelectedMusicCollection!;
+            window.ShowDialog();
+            OnPropertyChanged(nameof(MusicCollections));
+        }
+        private void DeleteMusicCollection()
+        {
+            var result = MessageBox.Show($"Soll der Eintrag '{SelectedMusicCollection?.Name}' gelöscht werden", "Löschen", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                bool error = false;
+                string errorMessage = string.Empty;
+
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        using var ctrl = new Logic.Controllers.App.MusicCollectionsController();
+
+                        await ctrl.DeleteAsync(SelectedMusicCollection!.Id).ConfigureAwait(false);
+                        await ctrl.SaveChangesAsync().ConfigureAwait(false);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        error = true;
+                        errorMessage = ex.Message;
+                    }
+                }).Wait();
+
+                if (error)
+                {
+                    MessageBox.Show(errorMessage, "Löschen", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                else
+                {
+                    OnPropertyChanged(nameof(MusicCollections));
+                }
+            }
+        }
+
         private async Task LoadMediaTypesAsync()
         {
             using var ctrl = new Logic.Controllers.Base.MediaTypesController();
@@ -285,6 +393,18 @@ namespace QTChinnok.MvvMApp.ViewModels
             SelectedMediaType = null;
             base.OnPropertyChanged(nameof(SelectedMediaType));
             base.OnPropertyChanged(nameof(MediaTypes));
+        }
+        private async Task LoadGenresAsync()
+        {
+            using var ctrl = new Logic.Controllers.Base.GenresController();
+            var items = await ctrl.GetAllAsync().ConfigureAwait(false);
+            var result = items.Where(i => i.Name != null && i.Name.Contains(genreFilter, System.StringComparison.CurrentCultureIgnoreCase));
+
+            _genres.Clear();
+            _genres.AddRange(result.Select(i => new TGenre(i)));
+            SelectedGenre = null;
+            base.OnPropertyChanged(nameof(SelectedGenre));
+            base.OnPropertyChanged(nameof(Genres));
         }
         private async Task LoadAlbumsAsync()
         {
@@ -303,13 +423,26 @@ namespace QTChinnok.MvvMApp.ViewModels
         {
             using var ctrl = new Logic.Controllers.App.TracksController();
             var items = await ctrl.GetAllAsync().ConfigureAwait(false);
-            var result = items.Where(i => i.Name.Contains(trackFilter, System.StringComparison.CurrentCultureIgnoreCase));
+            var result = items.Where(i => i.Name.Contains(trackFilter, System.StringComparison.CurrentCultureIgnoreCase)
+                                       || (i.Composer != null && i.Composer.Contains(trackFilter, System.StringComparison.CurrentCultureIgnoreCase)));
 
             _tracks.Clear();
             _tracks.AddRange(result.Select(i => new TTrack(i)));
             SelectedTrack = null;
             base.OnPropertyChanged(nameof(SelectedTrack));
             base.OnPropertyChanged(nameof(Tracks));
+        }
+        private async Task LoadMusicCollectionsAsync()
+        {
+            using var ctrl = new Logic.Controllers.App.MusicCollectionsController();
+            var items = await ctrl.GetAllAsync().ConfigureAwait(false);
+            var result = items.Where(i => i.Name != null && i.Name.Contains(musicCollectionFilter, System.StringComparison.CurrentCultureIgnoreCase));
+
+            _musicCollections.Clear();
+            _musicCollections.AddRange(result.Select(i => new TMusicCollection(i)));
+            SelectedMusicCollection = null;
+            base.OnPropertyChanged(nameof(SelectedMusicCollection));
+            base.OnPropertyChanged(nameof(MusicCollections));
         }
     }
 }

@@ -1,24 +1,30 @@
-﻿using QTChinnok.MvvMApp.Models;
+﻿using QTChinnok.WpfApp.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace QTChinnok.MvvMApp.ViewModels
+namespace QTChinnok.WpfApp.ViewModels
 {
-    using TMediaType = Models.MediaType;
     using TTrack = Models.Track;
+    using TGenre = Models.Genre;
+    using TAlbum = Models.Album;
+    using TMediaType = Models.MediaType;
 
     public class TrackViewModel : BaseViewModel
     {
         private ICommand? _cmdSave;
         private ICommand? _cmdClose;
 
+        private List<Genre> _genres = new();
+        private List<Album> _albums = new();
         private List<TMediaType> _mediaTypes = new();
 
         private TTrack? _model;
 
+        public TGenre[] Genres => _genres.ToArray();
+        public TAlbum[] Albums => _albums.ToArray();
         public TMediaType[] MediaTypes => _mediaTypes.ToArray();
 
         public ICommand CommandSave => RelayCommand.CreateCommand(ref _cmdSave, p => Save());
@@ -26,11 +32,21 @@ namespace QTChinnok.MvvMApp.ViewModels
 
         public TrackViewModel()
         {
+            OnPropertyChanged(nameof(Genres));
+            OnPropertyChanged(nameof(Albums));
             OnPropertyChanged(nameof(MediaTypes));
         }
         protected override void OnPropertyChanged(string propertyName)
         {
-            if (propertyName == nameof(MediaTypes))
+            if (propertyName == nameof(Genres))
+            {
+                Task.Run(LoadGenresAsync);
+            }
+            else if (propertyName == nameof(Albums))
+            {
+                Task.Run(LoadAlbumsAsync);
+            }
+            else if (propertyName == nameof(MediaTypes))
             {
                 Task.Run(LoadMediaTypesAsync);
             }
@@ -42,7 +58,15 @@ namespace QTChinnok.MvvMApp.ViewModels
         public TTrack Model
         {
             get => _model ??= new TTrack();
-            set => _model = value;
+            set
+            {
+                _model = value;
+                OnPropertyChanged(nameof(Name));
+                OnPropertyChanged(nameof(Composer));
+                OnPropertyChanged(nameof(MediaTypeId));
+                OnPropertyChanged(nameof(GenreId));
+                OnPropertyChanged(nameof(AlbumId));
+            }
         }
 
         public int Id
@@ -75,6 +99,38 @@ namespace QTChinnok.MvvMApp.ViewModels
         {
             get => Model.Composer;
             set => Model.Composer = value;
+        }
+
+        private async Task LoadGenresAsync()
+        {
+            using var ctrl = new Logic.Controllers.Base.GenresController();
+            var items = await ctrl.GetAllAsync().ConfigureAwait(false);
+
+            _genres.Clear();
+            _genres.AddRange(items.OrderBy(e => e.Name).Select(e => new TGenre(e)));
+
+            if (GenreId == 0 && _genres.Any())
+            {
+                GenreId = _genres.First().Id;
+            }
+            base.OnPropertyChanged(nameof(GenreId));
+            base.OnPropertyChanged(nameof(Genres));
+        }
+
+        private async Task LoadAlbumsAsync()
+        {
+            using var ctrl = new Logic.Controllers.App.AlbumsController();
+            var items = await ctrl.GetAllAsync().ConfigureAwait(false);
+
+            _albums.Clear();
+            _albums.AddRange(items.OrderBy(e => e.Title).Select(e => new TAlbum(e)));
+
+            if (AlbumId == 0 && _albums.Any())
+            {
+                AlbumId = _albums.First().Id;
+            }
+            base.OnPropertyChanged(nameof(AlbumId));
+            base.OnPropertyChanged(nameof(Albums));
         }
 
         private async Task LoadMediaTypesAsync()

@@ -1,6 +1,6 @@
 ﻿//@CodeCopy
 //MdStart
-namespace QTChinnok.MvvMApp.ViewModels
+namespace QTChinnok.WpfApp.ViewModels
 {
     using System;
     using System.Threading.Tasks;

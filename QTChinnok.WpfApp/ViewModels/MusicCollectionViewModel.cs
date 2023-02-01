@@ -1,0 +1,217 @@
+﻿
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
+
+namespace QTChinnok.WpfApp.ViewModels
+{
+    using TAlbum = Models.Album;
+    using TModel = Models.MusicCollection;
+    public class MusicCollectionViewModel : BaseViewModel
+    {
+        #region fields
+        private TModel? _model;
+        private ICommand? cmdSave;
+        private ICommand? cmdClose;
+
+        private ICommand? _cmdAddAlbum;
+        private ICommand? _cmdRemoveAlbum;
+        private List<TAlbum> _albums = new();
+        private List<TAlbum> _addAlbums = new();
+
+        private TAlbum? _selectedAlbum;
+        private TAlbum? _selectedAddAlbum;
+        #endregion fields
+
+        #region properties
+        public ICommand CommandSave
+        {
+            get
+            {
+                return RelayCommand.CreateCommand(ref cmdSave, p =>
+                {
+                    Save();
+                },
+                p => true);
+            }
+        }
+        public ICommand CommandClose
+        {
+            get
+            {
+                return RelayCommand.CreateCommand(ref cmdClose, p =>
+                {
+                    Close?.Invoke();
+                },
+                p => true);
+            }
+        }
+
+        public ICommand CommandAddAlbum
+        {
+            get
+            {
+                return RelayCommand.CreateCommand(ref _cmdAddAlbum, p =>
+                {
+                    AddAlbum(Model, SelectedAddAlbum!);
+                    OnPropertiesChanged();
+                },
+                p => SelectedAddAlbum != null);
+            }
+        }
+        public ICommand CommandRemoveAlbum
+        {
+            get
+            {
+                return RelayCommand.CreateCommand(ref _cmdRemoveAlbum, p =>
+                {
+                    RemoveMember(Model, SelectedAlbum!);
+                    OnPropertiesChanged();
+                },
+                p => SelectedAlbum != null);
+            }
+        }
+
+        public TModel Model
+        {
+            get => _model ??= new();
+            set
+            {
+                _model = value;
+                _albums.Clear();
+                _albums.AddRange(value.Albums);
+            }
+        }
+        public string Name
+        {
+            get { return Model.Name; }
+            set
+            {
+                Model.Name = value;
+                OnPropertiesChanged();
+            }
+        }
+
+        public TAlbum[] Albums => _albums.ToArray();
+        public TAlbum[] AddAlbums => _addAlbums.ToArray();
+
+        public TAlbum? SelectedAlbum
+        {
+            get => _selectedAlbum;
+            set
+            {
+                _selectedAlbum = value;
+            }
+        }
+        public TAlbum? SelectedAddAlbum
+        {
+            get => _selectedAddAlbum;
+            set
+            {
+                _selectedAddAlbum = value;
+            }
+        }
+        #endregion properties
+
+        #region Constructor
+        public MusicCollectionViewModel()
+        {
+            OnPropertyChanged(nameof(AddAlbums));
+        }
+        #endregion Constructor
+
+        protected void OnPropertiesChanged()
+        {
+            OnPropertyChanged(nameof(Name));
+            OnPropertyChanged(nameof(Albums));
+            OnPropertyChanged(nameof(AddAlbums));
+        }
+        protected override void OnPropertyChanged(string propertyName)
+        {
+            if (propertyName == nameof(AddAlbums))
+            {
+                Task.Run(() => LoadAddAlbumsAsync());
+            }
+            else
+            {
+                base.OnPropertyChanged(propertyName);
+            }
+        }
+
+        #region commands
+        public void Save()
+        {
+            var error = false;
+
+            Task.Run(async () =>
+            {
+                using var ctrl = new Logic.Controllers.App.MusicCollectionsController();
+
+                try
+                {
+                    if (Model.Id > 0)
+                    {
+                        var dbEntity = await ctrl.GetByIdAsync(Model.Id);
+
+                        if (dbEntity != null)
+                        {
+                            dbEntity.CopyFrom(this);
+                            dbEntity = await ctrl.UpdateAsync(dbEntity).ConfigureAwait(false);
+                            await ctrl.SaveChangesAsync().ConfigureAwait(false);
+                            Model.CopyFrom(dbEntity);
+                        }
+                    }
+                    else
+                    {
+                        var dbEntity = ctrl.Create();
+
+                        dbEntity.CopyFrom(this);
+                        dbEntity = await ctrl.InsertAsync(dbEntity).ConfigureAwait(false);
+                        await ctrl.SaveChangesAsync().ConfigureAwait(false);
+                        Model.CopyFrom(dbEntity);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    error = true;
+                    MessageBox.Show(ex.Message, "Save", MessageBoxButton.OK, MessageBoxImage.Stop);
+                }
+            }).Wait();
+
+            if (error == false)
+            {
+                Close();
+            }
+        }
+        public void Close()
+        {
+            Window?.Close();
+        }
+        #endregion commands
+
+        #region methods
+        private async Task LoadAddAlbumsAsync()
+        {
+            using var ctrl = new Logic.Controllers.App.AlbumsController();
+            var items = await ctrl.GetAllAsync().ConfigureAwait(false);
+            var difIds = items.Select(e => e.Id).Except(_albums.Select(e => e.Id));
+
+            _addAlbums.Clear();
+            _addAlbums.AddRange(items.Where(e => difIds.Contains(e.Id)).Select(e => new TAlbum(e)));
+            base.OnPropertyChanged(nameof(AddAlbums));
+        }
+        private void AddAlbum(TModel model, TAlbum album)
+        {
+            _albums.Add(album);
+        }
+        private void RemoveMember(TModel model, TAlbum album)
+        {
+            _albums.Remove(album);
+        }
+        #endregion methods
+    }
+}

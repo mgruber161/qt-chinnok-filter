@@ -1,4 +1,4 @@
-﻿namespace QTChinnok.MvvMApp.ViewModels
+﻿namespace QTChinnok.WpfApp.ViewModels
 {
     using System.Threading.Tasks;
     using System.Windows;

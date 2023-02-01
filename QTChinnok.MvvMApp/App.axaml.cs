@@ -17,10 +17,13 @@ namespace QTChinnok.MvvMApp
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
+                var viewModel = new MainViewModel();
+
                 desktop.MainWindow = new MainWindow
                 {
-                    DataContext = new MainViewModel(),
+                    DataContext = viewModel,
                 };
+                viewModel.Window = desktop.MainWindow;
             }
 
             base.OnFrameworkInitializationCompleted();

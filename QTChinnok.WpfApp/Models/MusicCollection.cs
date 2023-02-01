@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QTChinnok.MvvMApp.Models
+namespace QTChinnok.WpfApp.Models
 {
     public class MusicCollection
     {
@@ -19,6 +19,7 @@ namespace QTChinnok.MvvMApp.Models
 
             foreach (var item in entity.Albums)
             {
+                Albums.Add(new Models.Album(item));
                 if (AlbumText.Length > 0)
                 {
                     AlbumText += $", {item.Title}";
@@ -32,5 +33,6 @@ namespace QTChinnok.MvvMApp.Models
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string AlbumText { get; set; } = string.Empty;
+        public List<Album> Albums { get; set;} = new List<Album>();
     }
 }

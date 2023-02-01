@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using ReactiveUI;
+using QTChinnok.MvvMApp.Views;
 
 namespace QTChinnok.MvvMApp.ViewModels
 {
@@ -184,40 +184,42 @@ namespace QTChinnok.MvvMApp.ViewModels
             //window.ShowDialog();
             //OnPropertyChanged(nameof(Genres));
         }
-        private void DeleteGenre()
+        private async void DeleteGenre()
         {
+            var result = await MessageBox.ShowAsync(Window, $"Soll der Eintrag '{SelectedGenre?.Name}' gelöscht werden?", "Löschen", MessageBox.MessageBoxButtons.YesNo);
             //var result = MessageBox.Show($"Soll der Eintrag '{SelectedGenre?.Name}' gelöscht werden", "Löschen", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-            //if (result == MessageBoxResult.Yes)
-            //{
-            //    bool error = false;
-            //    string errorMessage = string.Empty;
+            if (result == MessageBox.MessageBoxResult.Yes)
+            {
+                bool error = false;
+                string errorMessage = string.Empty;
 
-            //    Task.Run(async () =>
-            //    {
-            //        try
-            //        {
-            //            using var ctrl = new Logic.Controllers.Base.GenresController();
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        using var ctrl = new Logic.Controllers.Base.GenresController();
 
-            //            await ctrl.DeleteAsync(SelectedGenre!.Id).ConfigureAwait(false);
-            //            await ctrl.SaveChangesAsync().ConfigureAwait(false);
-            //        }
-            //        catch (System.Exception ex)
-            //        {
-            //            error = true;
-            //            errorMessage = ex.Message;
-            //        }
-            //    }).Wait();
+                        await ctrl.DeleteAsync(SelectedGenre!.Id).ConfigureAwait(false);
+                        await ctrl.SaveChangesAsync().ConfigureAwait(false);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        error = true;
+                        errorMessage = ex.Message;
+                    }
+                }).Wait();
 
-            //    if (error)
-            //    {
-            //        MessageBox.Show(errorMessage, "Löschen", MessageBoxButton.OK, MessageBoxImage.Error);
-            //    }
-            //    else
-            //    {
-            //        OnPropertyChanged(nameof(Genres));
-            //    }
-            //}
+                if (error)
+                {
+                    await MessageBox.ShowAsync(Window, errorMessage, "Löschen", MessageBox.MessageBoxButtons.Ok);
+                    //await MessageBox.ShowAsync(Window, errorMessage, "Löschen", MessageBox.MessageBoxButtons.Ok);
+                }
+                else
+                {
+                    OnPropertyChanged(nameof(Genres));
+                }
+            }
         }
 
         private void AddMediaType()
