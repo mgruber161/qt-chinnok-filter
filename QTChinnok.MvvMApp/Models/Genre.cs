@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace QTChinnok.MvvMApp.Models
 {
-    public class Genre
+    public class Genre : ModelObject
     {
         public Genre()
         {
@@ -17,7 +17,6 @@ namespace QTChinnok.MvvMApp.Models
             Id = entity.Id;
             Name = entity.Name ?? string.Empty;
         }
-        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
     }
 }

@@ -7,14 +7,12 @@ namespace QTChinnok.Logic.Controllers.App
 
         internal override async Task<Entities.App.MusicCollection> ExecuteInsertAsync(Entities.App.MusicCollection entity)
         {
-            var albums = QueryAlbums(entity).ToArray();
-            var cloneEntity = new Entities.App.MusicCollection();
+            var albums = await QueryAlbums(entity).ToArrayAsync().ConfigureAwait(false);
 
-            cloneEntity.Id = entity.Id;
-            cloneEntity.Name = entity.Name;
-            cloneEntity.Albums.AddRange(albums);
+            entity.Albums.Clear();
+            entity.Albums.AddRange(albums);
 
-            return await base.ExecuteInsertAsync(cloneEntity).ConfigureAwait(false);
+            return await base.ExecuteInsertAsync(entity).ConfigureAwait(false);
         }
         internal override Entities.App.MusicCollection ExecuteUpdate(Entities.App.MusicCollection entity)
         {

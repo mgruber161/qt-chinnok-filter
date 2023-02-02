@@ -1,12 +1,9 @@
 ﻿//@CustumCode
 //MdStart
-using QTChinnok.Logic.Entities.App;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Data;
 using System.Windows.Input;
 
 namespace QTChinnok.WpfApp.ViewModels

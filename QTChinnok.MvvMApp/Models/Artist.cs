@@ -1,6 +1,6 @@
 ﻿namespace QTChinnok.MvvMApp.Models
 {
-    public class Artist
+    public class Artist : ModelObject
     {
         public Artist()
         {
@@ -11,7 +11,6 @@
             Id = entity.Id;
             Name = entity.Name ?? string.Empty;
         }
-        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
     }
 }

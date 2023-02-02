@@ -69,7 +69,28 @@
 					</DataGrid>
 				</StackPanel>
 			</TabItem>
-			<TabItem Header="Album(s)">
+      <TabItem Header="Artist(s)">
+        <StackPanel Orientation="Vertical">
+          <StackPanel Orientation="Horizontal" Margin="10">
+            <Label Margin="5">Filter:</Label>
+            <TextBox Width="250" Text="{Binding Path=ArtistFilter}"></TextBox>
+            <Button Width="50" Command="{Binding Path=CommandAddArtist}" Foreground="Green" Margin="10 0 0 0">+</Button>
+            <Button Width="100" Command="{Binding Path=CommandEditArtist}" Margin="10 0 0 0">Bearbeiten</Button>
+            <Button Width="100" Command="{Binding Path=CommandDeleteArtist}" Foreground="Red" Margin="10 0 0 0">Löschen</Button>
+          </StackPanel>
+          <DataGrid Items="{Binding Path=Artists}"
+                              SelectedItem="{Binding Path=SelectedArtist}"
+                              Height="200"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              SelectionMode="Single">
+            <DataGrid.Columns>
+              <DataGridTextColumn Width="*" Header="Name" Binding="{Binding Path=Name}"></DataGridTextColumn>
+            </DataGrid.Columns>
+          </DataGrid>
+        </StackPanel>
+      </TabItem>
+      <TabItem Header="Album(s)">
 				<StackPanel Orientation="Vertical">
 					<StackPanel Orientation="Horizontal" Margin="10">
 						<Label Margin="5">Filter:</Label>

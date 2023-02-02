@@ -1,7 +1,7 @@
 ﻿
 namespace QTChinnok.MvvMApp.Models
 {
-    public class Track : Logic.Contracts.IIdentifyable
+    public class Track : ModelObject
     {
         public Track()
         {
@@ -16,7 +16,6 @@ namespace QTChinnok.MvvMApp.Models
             Name = entity.Name;
             Composer = entity.Composer ?? string.Empty;
         }
-        public int Id { get; set; }
         public int? AlbumId { get; set; }
         public int? GenreId { get; set; }
         public int MediaTypeId { get; set; }

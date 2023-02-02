@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace QTChinnok.WpfApp.Models
+﻿namespace QTChinnok.WpfApp.Models
 {
     public class Genre
     {

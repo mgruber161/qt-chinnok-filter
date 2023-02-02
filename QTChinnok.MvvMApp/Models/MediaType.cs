@@ -1,6 +1,6 @@
 ﻿namespace QTChinnok.MvvMApp.Models
 {
-    public class MediaType
+    public class MediaType : ModelObject
     {
         public MediaType()
         {
@@ -16,7 +16,6 @@
             Id = entity.Id;
             Name = entity.Name ?? string.Empty;
         }
-        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
     }
 }

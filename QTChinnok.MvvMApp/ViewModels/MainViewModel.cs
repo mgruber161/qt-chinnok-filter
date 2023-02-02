@@ -10,6 +10,7 @@ using QTChinnok.MvvMApp.Views;
 namespace QTChinnok.MvvMApp.ViewModels
 {
     using TGenre = Models.Genre;
+    using TArtist = Models.Artist;
     using TMediaType = Models.MediaType;
     using TAlbum = Models.Album;
     using TTrack = Models.Track;
@@ -18,16 +19,19 @@ namespace QTChinnok.MvvMApp.ViewModels
         #region fields
         private string genreFilter = string.Empty;
         private string mediaTypeFilter = string.Empty;
+        private string artistFilter = string.Empty;
         private string albumFilter = string.Empty;
         private string trackFilter = string.Empty;
         private string musicCollectionFilter = string.Empty;
 
         private List<TGenre> _genres = new();
         private List<TMediaType> _mediaTypes = new();
+        private List<TArtist> _artists = new();
         private List<TAlbum> _albums = new();
         private List<TTrack> _tracks = new();
         private TGenre? _selectedGenre;
         private TMediaType? _selectedMediaType;
+        private TArtist? _selectedArtist;
         private TAlbum? _selectedAlbum;
         private TTrack? _selectedTrack;
 
@@ -35,6 +39,7 @@ namespace QTChinnok.MvvMApp.ViewModels
 
         #region properties
         public TGenre[] Genres => _genres.ToArray();
+        public TArtist[] Artists => _artists.ToArray();
         public TAlbum[] Albums => _albums.ToArray();
         public TTrack[] Tracks => _tracks.ToArray();
         public TMediaType[] MediaTypes => _mediaTypes.ToArray();
@@ -55,6 +60,15 @@ namespace QTChinnok.MvvMApp.ViewModels
             {
                 mediaTypeFilter = value;
                 OnPropertyChanged(nameof(MediaTypes));
+            }
+        }
+        public string ArtistFilter
+        {
+            get => artistFilter;
+            set
+            {
+                artistFilter = value;
+                OnPropertyChanged(nameof(Artists));
             }
         }
         public string AlbumFilter
@@ -109,6 +123,17 @@ namespace QTChinnok.MvvMApp.ViewModels
             }
         }
 
+        public TArtist? SelectedArtist
+        {
+            get => _selectedArtist;
+            set
+            {
+                _selectedArtist = value;
+                OnPropertyChanged(nameof(CommandEditArtist));
+                OnPropertyChanged(nameof(CommandDeleteArtist));
+            }
+        }
+
         public TTrack? SelectedTrack
         {
             get => _selectedTrack;
@@ -131,6 +156,10 @@ namespace QTChinnok.MvvMApp.ViewModels
         public ICommand CommandEditMediaType => RelayCommand.Create(p => EditMediaType(), p => SelectedMediaType != null);
         public ICommand CommandDeleteMediaType => RelayCommand.Create(p => DeleteMediaType(), p => SelectedMediaType != null);
 
+        public ICommand CommandAddArtist => RelayCommand.Create((p) => AddArtist());
+        public ICommand CommandEditArtist => RelayCommand.Create(p => EditArtist(), p => SelectedArtist != null);
+        public ICommand CommandDeleteArtist => RelayCommand.Create(p => DeleteArtist(), p => SelectedArtist != null);
+
         public ICommand CommandAddAlbum => RelayCommand.Create(p => AddAlbum());
         public ICommand CommandEditAlbum => RelayCommand.Create(p => EditAlbum(), p => SelectedAlbum != null);
         public ICommand CommandDeleteAlbum => RelayCommand.Create(p => DeleteAlbum(), p => SelectedAlbum != null);
@@ -142,6 +171,7 @@ namespace QTChinnok.MvvMApp.ViewModels
         {
             OnPropertyChanged(nameof(Genres));
             OnPropertyChanged(nameof(MediaTypes));
+            OnPropertyChanged(nameof(Artists));
             OnPropertyChanged(nameof(Albums));
             OnPropertyChanged(nameof(Tracks));
         }
@@ -154,6 +184,10 @@ namespace QTChinnok.MvvMApp.ViewModels
             else if (propertyName == nameof(MediaTypes))
             {
                 Task.Run(LoadMediaTypesAsync);
+            }
+            else if (propertyName == nameof(Artists))
+            {
+                Task.Run(LoadArtistsAsync);
             }
             else if (propertyName == nameof(Albums))
             {
@@ -187,7 +221,6 @@ namespace QTChinnok.MvvMApp.ViewModels
         private async void DeleteGenre()
         {
             var result = await MessageBox.ShowAsync(Window, $"Soll der Eintrag '{SelectedGenre?.Name}' gelöscht werden?", "Löschen", MessageBox.MessageBoxButtons.YesNo);
-            //var result = MessageBox.Show($"Soll der Eintrag '{SelectedGenre?.Name}' gelöscht werden", "Löschen", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (result == MessageBox.MessageBoxResult.Yes)
             {
@@ -213,7 +246,6 @@ namespace QTChinnok.MvvMApp.ViewModels
                 if (error)
                 {
                     await MessageBox.ShowAsync(Window, errorMessage, "Löschen", MessageBox.MessageBoxButtons.Ok);
-                    //await MessageBox.ShowAsync(Window, errorMessage, "Löschen", MessageBox.MessageBoxButtons.Ok);
                 }
                 else
                 {
@@ -230,6 +262,57 @@ namespace QTChinnok.MvvMApp.ViewModels
         }
         private void DeleteMediaType()
         {
+        }
+
+        private async void AddArtist()
+        {
+            ArtistWindow window = new();
+
+            await window.ShowDialog(Window);
+            OnPropertyChanged(nameof(Artists));
+        }
+        private async void EditArtist()
+        {
+            ArtistWindow window = new();
+
+            window.ViewModel.Model = SelectedArtist!;
+            await window.ShowDialog(Window);
+            OnPropertyChanged(nameof(Artists));
+        }
+        private async void DeleteArtist()
+        {
+            var result = await MessageBox.ShowAsync(Window, $"Soll der Eintrag '{SelectedArtist?.Name}' gelöscht werden?", "Löschen", MessageBox.MessageBoxButtons.YesNo);
+
+            if (result == MessageBox.MessageBoxResult.Yes)
+            {
+                bool error = false;
+                string errorMessage = string.Empty;
+
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        using var ctrl = new Logic.Controllers.Base.ArtistsController();
+
+                        await ctrl.DeleteAsync(SelectedGenre!.Id).ConfigureAwait(false);
+                        await ctrl.SaveChangesAsync().ConfigureAwait(false);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        error = true;
+                        errorMessage = ex.Message;
+                    }
+                }).Wait();
+
+                if (error)
+                {
+                    await MessageBox.ShowAsync(Window, errorMessage, "Löschen", MessageBox.MessageBoxButtons.Ok);
+                }
+                else
+                {
+                    OnPropertyChanged(nameof(Genres));
+                }
+            }
         }
 
         private void AddAlbum()
@@ -314,6 +397,18 @@ namespace QTChinnok.MvvMApp.ViewModels
             SelectedMediaType = null;
             base.OnPropertyChanged(nameof(SelectedMediaType));
             base.OnPropertyChanged(nameof(MediaTypes));
+        }
+        private async Task LoadArtistsAsync()
+        {
+            using var ctrl = new Logic.Controllers.Base.ArtistsController();
+            var items = await ctrl.GetAllAsync().ConfigureAwait(false);
+            var result = items.Where(i => i.Name != null && i.Name.Contains(artistFilter, System.StringComparison.CurrentCultureIgnoreCase));
+
+            _artists.Clear();
+            _artists.AddRange(result.Select(i => new TArtist(i)));
+            SelectedArtist = null;
+            base.OnPropertyChanged(nameof(SelectedArtist));
+            base.OnPropertyChanged(nameof(Artists));
         }
         private async Task LoadAlbumsAsync()
         {

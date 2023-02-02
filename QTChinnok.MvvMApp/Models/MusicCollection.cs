@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace QTChinnok.MvvMApp.Models
 {
-    public class MusicCollection
+    public class MusicCollection : ModelObject
     {
         public MusicCollection()
         {
@@ -29,7 +29,6 @@ namespace QTChinnok.MvvMApp.Models
                 }
             }
         }
-        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string AlbumText { get; set; } = string.Empty;
     }
