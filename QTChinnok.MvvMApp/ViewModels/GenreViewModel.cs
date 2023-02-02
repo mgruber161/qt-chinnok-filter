@@ -1,15 +1,19 @@
-﻿namespace QTChinnok.WpfApp.ViewModels
+﻿using CommonBase.Extensions;
+using QTChinnok.MvvMApp.Views;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Input;
+
+namespace QTChinnok.MvvMApp.ViewModels
 {
-    using System.Threading.Tasks;
-    using System.Windows;
-    using System.Windows.Input;
     using TGenre = Models.Genre;
 
     public class GenreViewModel : BaseViewModel
     {
         #region fields
-        private ICommand? _cmdSave;
-        private ICommand? _cmdClose;
         private TGenre? _model;
         #endregion fields
 
@@ -36,20 +40,20 @@
         #endregion properties
 
         #region commands
-        public ICommand CommandSave => RelayCommand.Create(ref _cmdSave, p => Save());
-        public ICommand CommandClose => RelayCommand.Create(ref _cmdClose, p => Close());
+        public ICommand CommandSave => RelayCommand.Create(p => Save());
+        public ICommand CommandClose => RelayCommand.Create(p => Close());
         #endregion commands
 
         #region methods
-        private void Save()
+        private async void Save()
         {
             bool error = false;
             string errorMessage = string.Empty;
 
+            using var ctrl = new Logic.Controllers.Base.GenresController();
+
             Task.Run(async () =>
             {
-                using var ctrl = new Logic.Controllers.Base.GenresController();
-
                 try
                 {
                     var entity = ctrl.Create();
@@ -70,16 +74,15 @@
                     error = true;
                     errorMessage = ex.Message;
                 }
-
             }).Wait();
 
             if (error)
             {
-                MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                await MessageBox.ShowAsync(Window, errorMessage, "Löschen", MessageBox.MessageBoxButtons.Ok);
             }
             else
             {
-                Window?.Close();
+                Close();
             }
         }
         private void Close()

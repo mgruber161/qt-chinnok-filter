@@ -6,6 +6,8 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="QTChinnok.MvvMApp.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
+		Height="500"
+		Width="800"
         Title="MainWindow">
 
     <Design.DataContext>

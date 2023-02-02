@@ -75,6 +75,34 @@
      <a asp-action="OrderBy" asp-route-orderBy="Composer ASC" class="btn btn-outline"><strong>Composer</strong></a>
     }
   </th>
+  <th>
+   @if (orderBy.StartsWith("Milliseconds") && orderBy.EndsWith("ASC"))
+    {
+     <a asp-action="OrderBy" asp-route-orderBy="Milliseconds DESC" class="btn btn-outline"><strong>Milliseconds</strong> <i class="fa fa-sort-desc"></i></a>
+    }
+   else if (orderBy.StartsWith("Milliseconds") && orderBy.EndsWith("DESC"))
+    {
+     <a asp-action="OrderBy" asp-route-orderBy="" class="btn btn-outline"><strong>Milliseconds</strong> <i class="fa fa-sort-asc"></i></a>
+    }
+   else
+    {
+     <a asp-action="OrderBy" asp-route-orderBy="Milliseconds ASC" class="btn btn-outline"><strong>Milliseconds</strong></a>
+    }
+  </th>
+  <th>
+   @if (orderBy.StartsWith("UnitPrice") && orderBy.EndsWith("ASC"))
+    {
+     <a asp-action="OrderBy" asp-route-orderBy="UnitPrice DESC" class="btn btn-outline"><strong>UnitPrice</strong> <i class="fa fa-sort-desc"></i></a>
+    }
+   else if (orderBy.StartsWith("UnitPrice") && orderBy.EndsWith("DESC"))
+    {
+     <a asp-action="OrderBy" asp-route-orderBy="" class="btn btn-outline"><strong>UnitPrice</strong> <i class="fa fa-sort-asc"></i></a>
+    }
+   else
+    {
+     <a asp-action="OrderBy" asp-route-orderBy="UnitPrice ASC" class="btn btn-outline"><strong>UnitPrice</strong></a>
+    }
+  </th>
   <th></th>
  </tr>
 </thead>

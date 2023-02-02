@@ -147,6 +147,7 @@
                               ScrollViewer.VerticalScrollBarVisibility="Auto">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Name" Binding="{Binding Path=Name}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Albums" Width="*" Binding="{Binding Path=AlbumText}"></DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
                 </StackPanel>

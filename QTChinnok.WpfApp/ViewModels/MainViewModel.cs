@@ -111,23 +111,23 @@ namespace QTChinnok.WpfApp.ViewModels
         public TTrack? SelectedTrack { get; set; }
         public TMusicCollection? SelectedMusicCollection { get; set; }
 
-        public ICommand CommandAddGenre => RelayCommand.CreateCommand(ref _cmdAddGenre, p => AddGenre());
+        public ICommand CommandAddGenre => RelayCommand.Create(ref _cmdAddGenre, p => AddGenre());
         public ICommand CommandEditGenre => RelayCommand.CreateCommand(ref _cmdEditGenre, p => EditGenre(), p => SelectedGenre != null);
         public ICommand CommandDeleteGenre => RelayCommand.CreateCommand(ref _cmdDeleteGenre, p => DeleteGenre(), p => SelectedGenre != null);
 
-        public ICommand CommandAddMediaType => RelayCommand.CreateCommand(ref _cmdAddMediaType, p => AddMediaType());
+        public ICommand CommandAddMediaType => RelayCommand.Create(ref _cmdAddMediaType, p => AddMediaType());
         public ICommand CommandEditMediaType => RelayCommand.CreateCommand(ref _cmdEditMediaType, p => EditMediaType(), p => SelectedMediaType != null);
         public ICommand CommandDeleteMediaType => RelayCommand.CreateCommand(ref _cmdDeleteMediaType, p => DeleteMediaType(), p => SelectedMediaType != null);
 
-        public ICommand CommandAddAlbum => RelayCommand.CreateCommand(ref _cmdAddAlbum, p => AddAlbum());
+        public ICommand CommandAddAlbum => RelayCommand.Create(ref _cmdAddAlbum, p => AddAlbum());
         public ICommand CommandEditAlbum => RelayCommand.CreateCommand(ref _cmdEditAlbum, p => EditAlbum(), p => SelectedAlbum != null);
         public ICommand CommandDeleteAlbum => RelayCommand.CreateCommand(ref _cmdDeleteAlbum, p => DeleteAlbum(), p => SelectedAlbum != null);
 
-        public ICommand CommandAddTrack => RelayCommand.CreateCommand(ref _cmdAddTrack, p => AddTrack());
+        public ICommand CommandAddTrack => RelayCommand.Create(ref _cmdAddTrack, p => AddTrack());
         public ICommand CommandEditTrack => RelayCommand.CreateCommand(ref _cmdEditTrack, p => EditTrack(), p => SelectedTrack != null);
         public ICommand CommandDeleteTrack => RelayCommand.CreateCommand(ref _cmdDeleteTrack, p => DeleteTrack(), p => SelectedTrack != null);
 
-        public ICommand CommandAddMusicCollection => RelayCommand.CreateCommand(ref _cmdAddMusicCollection, p => AddMusicCollection());
+        public ICommand CommandAddMusicCollection => RelayCommand.Create(ref _cmdAddMusicCollection, p => AddMusicCollection());
         public ICommand CommandEditMusicCollection => RelayCommand.CreateCommand(ref _cmdEditMusicCollection, p => EditMusicCollection(), p => SelectedMusicCollection != null);
         public ICommand CommandDeleteMusicCollection => RelayCommand.CreateCommand(ref _cmdDeleteMusicCollection, p => DeleteMusicCollection(), p => SelectedMusicCollection != null);
         #endregion properties

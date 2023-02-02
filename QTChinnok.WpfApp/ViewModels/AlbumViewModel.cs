@@ -16,8 +16,8 @@ namespace QTChinnok.WpfApp.ViewModels
         private TAlbum? _model;
         private List<TArtist> _artists = new();
 
-        public ICommand CommandSave => RelayCommand.CreateCommand(ref _cmdSave, p => Save());
-        public ICommand CommandClose => RelayCommand.CreateCommand(ref _cmdClose, p => Close());
+        public ICommand CommandSave => RelayCommand.Create(ref _cmdSave, p => Save());
+        public ICommand CommandClose => RelayCommand.Create(ref _cmdClose, p => Close());
 
         public TAlbum Model
         {

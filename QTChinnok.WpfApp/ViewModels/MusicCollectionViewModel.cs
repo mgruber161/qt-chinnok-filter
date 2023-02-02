@@ -45,7 +45,7 @@ namespace QTChinnok.WpfApp.ViewModels
             {
                 return RelayCommand.CreateCommand(ref cmdClose, p =>
                 {
-                    Close?.Invoke();
+                    Close();
                 },
                 p => true);
             }
@@ -84,6 +84,7 @@ namespace QTChinnok.WpfApp.ViewModels
                 _model = value;
                 _albums.Clear();
                 _albums.AddRange(value.Albums);
+                OnPropertiesChanged();
             }
         }
         public string Name
@@ -149,31 +150,60 @@ namespace QTChinnok.WpfApp.ViewModels
 
             Task.Run(async () =>
             {
-                using var ctrl = new Logic.Controllers.App.MusicCollectionsController();
+                using var mcCtrl = new Logic.Controllers.App.MusicCollectionsController();
+                using var albumCtrl = new Logic.Controllers.App.AlbumsController(mcCtrl);
 
                 try
                 {
                     if (Model.Id > 0)
                     {
-                        var dbEntity = await ctrl.GetByIdAsync(Model.Id);
+                        var dbEntity = await mcCtrl.GetByIdAsync(Model.Id);
 
                         if (dbEntity != null)
                         {
                             dbEntity.CopyFrom(this);
-                            dbEntity = await ctrl.UpdateAsync(dbEntity).ConfigureAwait(false);
-                            await ctrl.SaveChangesAsync().ConfigureAwait(false);
+                            dbEntity.Albums.Clear();
+                            foreach (var item in _albums)
+                            {
+                                var album = await albumCtrl.GetByIdAsync(item.Id).ConfigureAwait(false);
+
+                                if (album != null)
+                                {
+                                    dbEntity.Albums.Add(album);
+                                }
+                            }
+                            dbEntity = await mcCtrl.UpdateAsync(dbEntity).ConfigureAwait(false);
+                            await mcCtrl.SaveChangesAsync().ConfigureAwait(false);
                             Model.CopyFrom(dbEntity);
                         }
                     }
                     else
                     {
-                        var dbEntity = ctrl.Create();
+                        var dbEntity = mcCtrl.Create();
 
                         dbEntity.CopyFrom(this);
-                        dbEntity = await ctrl.InsertAsync(dbEntity).ConfigureAwait(false);
-                        await ctrl.SaveChangesAsync().ConfigureAwait(false);
+                        foreach (var item in _albums)
+                        {
+                            var album = await albumCtrl.GetByIdAsync(item.Id).ConfigureAwait(false);
+
+                            if (album != null)
+                            {
+                                dbEntity.Albums.Add(album);
+                            }
+                        }
+                        dbEntity = await mcCtrl.InsertAsync(dbEntity).ConfigureAwait(false);
+                        await mcCtrl.SaveChangesAsync().ConfigureAwait(false);
                         Model.CopyFrom(dbEntity);
                     }
+                    //foreach (var item in Model.Albums)
+                    //{
+                    //    await mcCtrl.RemoveAlbumAsync(Model.Id, item.Id).ConfigureAwait(false);
+                    //}
+                    //foreach (var item in _albums)
+                    //{
+                    //    await mcCtrl.AddAlbumAsync(Model.Id, item.Id).ConfigureAwait(false);
+                    //}
+                    //await mcCtrl.SaveChangesAsync().ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -202,6 +232,16 @@ namespace QTChinnok.WpfApp.ViewModels
 
             _addAlbums.Clear();
             _addAlbums.AddRange(items.Where(e => difIds.Contains(e.Id)).Select(e => new TAlbum(e)));
+
+            if (_addAlbums.Any())
+            {
+                SelectedAddAlbum = _addAlbums.First();
+            }
+            else
+            {
+                SelectedAddAlbum = null;
+            }
+            base.OnPropertyChanged(nameof(SelectedAddAlbum));
             base.OnPropertyChanged(nameof(AddAlbums));
         }
         private void AddAlbum(TModel model, TAlbum album)

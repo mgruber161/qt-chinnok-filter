@@ -38,7 +38,7 @@ namespace QTChinnok.WpfApp.ViewModels
         }
 
         #region Factory mothods
-        public static ICommand CreateCommand(ref ICommand? command, Action<object?> execute)
+        public static ICommand Create(ref ICommand? command, Action<object?> execute)
         {
             return CreateCommand(ref command, execute, null);
         }

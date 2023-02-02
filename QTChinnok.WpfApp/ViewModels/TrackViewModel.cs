@@ -27,8 +27,8 @@ namespace QTChinnok.WpfApp.ViewModels
         public TAlbum[] Albums => _albums.ToArray();
         public TMediaType[] MediaTypes => _mediaTypes.ToArray();
 
-        public ICommand CommandSave => RelayCommand.CreateCommand(ref _cmdSave, p => Save());
-        public ICommand CommandClose => RelayCommand.CreateCommand(ref _cmdClose, p => Close());
+        public ICommand CommandSave => RelayCommand.Create(ref _cmdSave, p => Save());
+        public ICommand CommandClose => RelayCommand.Create(ref _cmdClose, p => Close());
 
         public TrackViewModel()
         {

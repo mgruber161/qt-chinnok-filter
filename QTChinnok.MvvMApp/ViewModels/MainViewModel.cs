@@ -169,20 +169,20 @@ namespace QTChinnok.MvvMApp.ViewModels
             }
         }
 
-        private void AddGenre()
+        private async void AddGenre()
         {
-            //GenreWindow window = new();
+            GenreWindow window = new();
 
-            //window.ShowDialog();
-            //OnPropertyChanged(nameof(Genres));
+            await window.ShowDialog(Window);
+            OnPropertyChanged(nameof(Genres));
         }
-        private void EditGenre()
+        private async void EditGenre()
         {
-            //GenreWindow window = new();
+            GenreWindow window = new();
 
-            //window.ViewModel.Model = SelectedGenre!;
-            //window.ShowDialog();
-            //OnPropertyChanged(nameof(Genres));
+            window.ViewModel.Model = SelectedGenre!;
+            await window.ShowDialog(Window);
+            OnPropertyChanged(nameof(Genres));
         }
         private async void DeleteGenre()
         {

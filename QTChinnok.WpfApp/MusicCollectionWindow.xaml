@@ -36,7 +36,7 @@
         <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Left" Grid.ColumnSpan="2">
             <Button Width="100" Margin="10" Command="{Binding Path=CommandRemoveAlbum}" BorderBrush="Red" Background="Transparent">Entfernen</Button>
             <Label Width="120" Margin="10">Album hinzufügen:</Label>
-            <ComboBox MinWidth="155" Margin="10" 
+            <ComboBox MinWidth="300" Margin="10" 
                       ItemsSource="{Binding Path=AddAlbums}" 
                       SelectedValue="Id"
                       DisplayMemberPath="Title"
@@ -57,9 +57,9 @@
         </DataGrid>
 
         <Button Grid.Row="6" Grid.Column="2" Margin="6"
-                Command="{Binding Path=DataContext.CommandSave}" IsDefault="True">Speichern</Button>
+                Command="{Binding Path=CommandSave}" IsDefault="True">Speichern</Button>
         <Button Grid.Row="6" Grid.Column="3" Margin="6" 
-                Command="{Binding Path=DataContext.CommandClose}">Abbrechen</Button>
+                Command="{Binding Path=CommandClose}">Abbrechen</Button>
 
     </Grid>
 </Window>
