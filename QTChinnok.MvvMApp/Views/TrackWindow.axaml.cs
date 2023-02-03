@@ -5,6 +5,10 @@ namespace QTChinnok.MvvMApp.Views
         public TrackWindow()
         {
             InitializeComponent();
+            DataContext = ViewModel = new ViewModels.TrackViewModel()
+            {
+                Window = this,
+            };
         }
     }
 }

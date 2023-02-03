@@ -5,7 +5,6 @@ namespace QTChinnok.MvvMApp.Models
     {
         public Track()
         {
-
         }
         public Track(Logic.Models.App.Track entity)
         {
@@ -21,6 +20,6 @@ namespace QTChinnok.MvvMApp.Models
         public int MediaTypeId { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Composer { get; set; } = string.Empty;
-
+        public override string ToString() => $"{Name}-{Composer}";
     }
 }

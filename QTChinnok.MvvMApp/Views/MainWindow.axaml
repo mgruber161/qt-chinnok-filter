@@ -130,7 +130,7 @@
                               SelectionMode="Single">
 						<DataGrid.Columns>
 							<DataGridTextColumn Header="Interpret" Binding="{Binding Path=Composer}"></DataGridTextColumn>
-							<DataGridTextColumn Header="Name" Binding="{Binding Path=Name}"></DataGridTextColumn>
+							<DataGridTextColumn Header="Name" Width="*" Binding="{Binding Path=Name}"></DataGridTextColumn>
 						</DataGrid.Columns>
 					</DataGrid>
 				</StackPanel>

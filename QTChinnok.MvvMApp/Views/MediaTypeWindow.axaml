@@ -3,10 +3,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:QTChinnok.MvvMApp.ViewModels"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="QTChinnok.MvvMApp.Views.MediaTypeWindow"
-        Width="600"
-        Height="200"
+		    WindowStartupLocation="CenterScreen"
+		    Width="600"
+		    Height="200"
         Title="MediaType">
     <Window.DataContext>
         <vm:MediaTypeViewModel x:Name="ViewModel"/>

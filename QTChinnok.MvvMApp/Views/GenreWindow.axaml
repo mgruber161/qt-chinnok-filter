@@ -3,7 +3,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:QTChinnok.MvvMApp.ViewModels"
-        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="200"
         x:Class="QTChinnok.MvvMApp.Views.GenreWindow"
 		    WindowStartupLocation="CenterScreen"
 		    Width="600"

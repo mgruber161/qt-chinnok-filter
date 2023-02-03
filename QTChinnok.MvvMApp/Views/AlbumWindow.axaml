@@ -2,8 +2,44 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        xmlns:vm="using:QTChinnok.MvvMApp.ViewModels"
         x:Class="QTChinnok.MvvMApp.Views.AlbumWindow"
-        Title="AlbumWindow">
-  Welcome to Avalonia!
+		    WindowStartupLocation="CenterScreen"
+		    Width="700"
+		    Height="200"
+        Title="Album">
+  <Window.DataContext>
+    <vm:AlbumViewModel></vm:AlbumViewModel>
+  </Window.DataContext>
+  <Grid Margin="10">
+    <Grid.RowDefinitions>
+      <RowDefinition></RowDefinition>
+      <RowDefinition Height="55"></RowDefinition>
+      <RowDefinition Height="55"></RowDefinition>
+      <RowDefinition Height="80"></RowDefinition>
+      <RowDefinition></RowDefinition>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="150"></ColumnDefinition>
+      <ColumnDefinition></ColumnDefinition>
+    </Grid.ColumnDefinitions>
+
+    <Label Grid.Row="1" Grid.Column="0" Margin="10">Artist:</Label>
+    <ComboBox Grid.Row="1" Grid.Column="1" MinWidth="500"
+              Margin="12"
+              Items="{Binding Path=ArtistList}"
+              SelectedItem="{Binding Path=SelectedArtist}">
+      <ComboBox.ItemTemplate>
+        <DataTemplate>
+          <TextBlock Text="{Binding Name}" />
+        </DataTemplate>
+      </ComboBox.ItemTemplate>
+    </ComboBox>
+    <Label Grid.Row="2" Grid.Column="0" Margin="10">Title:</Label>
+    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=Title}" Margin="10"></TextBox>
+    <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" Margin="10" HorizontalAlignment="Right">
+      <Button Width="150" Command="{Binding Path=CommandSave}" Margin="10">Speichern</Button>
+      <Button Width="150" Command="{Binding Path=CommandClose}" Margin="10">Schließen</Button>
+    </StackPanel>
+  </Grid>
 </Window>

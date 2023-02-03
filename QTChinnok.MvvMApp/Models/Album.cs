@@ -4,7 +4,6 @@
     {
         public Album()
         {
-
         }
         public Album(Logic.Models.App.Album entity)
         {
