@@ -19,8 +19,8 @@
 
 	<Grid>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="40*"></RowDefinition>
-			<RowDefinition Height="60*"></RowDefinition>
+			<RowDefinition Height="150"></RowDefinition>
+			<RowDefinition Height="*"></RowDefinition>
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*"></ColumnDefinition>
@@ -39,7 +39,7 @@
 					</StackPanel>
 					<DataGrid Items="{Binding Path=Genres}"
                               SelectedItem="{Binding Path=SelectedGenre}"
-                              Height="200"
+                              VerticalAlignment="Stretch"
                               AutoGenerateColumns="False"
                               IsReadOnly="True"
                               SelectionMode="Single">
@@ -60,7 +60,7 @@
 					</StackPanel>
 					<DataGrid Items="{Binding Path=MediaTypes}"
                               SelectedItem="{Binding Path=SelectedMediaType}"
-                              Height="200"
+                              VerticalAlignment="Stretch"
                               AutoGenerateColumns="False"
                               IsReadOnly="True"
                               SelectionMode="Single">
@@ -81,7 +81,7 @@
           </StackPanel>
           <DataGrid Items="{Binding Path=Artists}"
                               SelectedItem="{Binding Path=SelectedArtist}"
-                              Height="200"
+                              VerticalAlignment="Stretch"
                               AutoGenerateColumns="False"
                               IsReadOnly="True"
                               SelectionMode="Single">
@@ -102,7 +102,7 @@
 					</StackPanel>
 					<DataGrid Items="{Binding Path=Albums}"
                               SelectedItem="{Binding Path=SelectedAlbum}"
-                              Height="200"
+                              VerticalAlignment="Stretch"
                               AutoGenerateColumns="False"
                               IsReadOnly="True"
                               SelectionMode="Single">
@@ -124,7 +124,7 @@
           </StackPanel>
 					<DataGrid Items="{Binding Path=Tracks}"
                               SelectedItem="{Binding Path=SelectedTrack}"
-                              Height="200"
+                              VerticalAlignment="Stretch"
                               AutoGenerateColumns="False"
                               IsReadOnly="True"
                               SelectionMode="Single">

@@ -104,8 +104,8 @@ namespace QTChinnok.MvvMApp.ViewModels
         {
             protected override ModelView<TTrackModel, TTrackEntity>? ModelView => new TrackWindow();
             protected override Func<TTrackEntity, TTrackModel> ConvertTo => e => new TTrackModel(e);
-            protected override Predicate<TTrackEntity> LoadPredicate => e => e.Composer != null && e.Composer.Contains(ModelFilter, StringComparison.CurrentCultureIgnoreCase);
-
+            protected override Predicate<TTrackEntity> LoadPredicate => e => (e.Composer != null && e.Composer.Contains(ModelFilter, StringComparison.CurrentCultureIgnoreCase)
+                                                                                || (e.Name.Contains(ModelFilter, StringComparison.CurrentCultureIgnoreCase)));
             public TracksViewModel(BaseViewModel otherViewModel) : base(otherViewModel)
             {
             }
