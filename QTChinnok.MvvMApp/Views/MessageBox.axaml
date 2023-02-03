@@ -4,11 +4,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" 
         x:Class="QTChinnok.MvvMApp.Views.MessageBox"
-        WindowStartupLocation="CenterScreen"
         MinWidth="400"
         MinHeight="100"
-        SizeToContent="WidthAndHeight" 
-        CanResize="False">
+        WindowStartupLocation="CenterScreen"
+        SizeToContent="WidthAndHeight" CanResize="False">
   
   <Grid Margin="10">
     <Grid.RowDefinitions>

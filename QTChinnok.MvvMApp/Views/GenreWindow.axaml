@@ -33,5 +33,4 @@
       <Button Width="150" Command="{Binding Path=CommandClose}" Margin="10">Schließen</Button>
     </StackPanel>
   </Grid>
-
 </Window>

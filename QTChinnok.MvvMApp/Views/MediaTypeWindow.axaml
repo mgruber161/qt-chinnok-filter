@@ -3,35 +3,33 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:QTChinnok.MvvMApp.ViewModels"
-        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="200"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="QTChinnok.MvvMApp.Views.MediaTypeWindow"
-		    WindowStartupLocation="CenterScreen"
-		    Width="600"
-		    Height="200"
-        Title="Genre">
-  <Window.DataContext>
-    <vm:GenreViewModel x:Name="ViewModel"/>
-  </Window.DataContext>
+        Width="600"
+        Height="200"
+        Title="MediaType">
+    <Window.DataContext>
+        <vm:MediaTypeViewModel x:Name="ViewModel"/>
+    </Window.DataContext>
 
-  <Grid Margin="10">
-    <Grid.RowDefinitions>
-      <RowDefinition Height="30"></RowDefinition>
-      <RowDefinition Height="45"></RowDefinition>
-      <RowDefinition Height="55"></RowDefinition>
-      <RowDefinition></RowDefinition>
-    </Grid.RowDefinitions>
-    <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="200"></ColumnDefinition>
-      <ColumnDefinition></ColumnDefinition>
-    </Grid.ColumnDefinitions>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition Height="45"></RowDefinition>
+            <RowDefinition Height="55"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
 
-    <Label Grid.Row="1" Grid.Column="0" Margin="10">Name:</Label>
-    <TextBox Grid.Row="1" Grid.Column="1" Margin="10" Text="{Binding Path=Name}"></TextBox>
+        <Label Grid.Row="1" Grid.Column="0" Margin="10">Name:</Label>
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="10" Text="{Binding Path=Name}"></TextBox>
 
-    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-      <Button Width="150" Command="{Binding Path=CommandSave}" Margin="10">Speichern</Button>
-      <Button Width="150" Command="{Binding Path=CommandClose}" Margin="10">Schließen</Button>
-    </StackPanel>
-  </Grid>
-
+        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Width="150" Command="{Binding Path=CommandSave}" Margin="10">Speichern</Button>
+            <Button Width="150" Command="{Binding Path=CommandClose}" Margin="10">Schließen</Button>
+        </StackPanel>
+    </Grid>
 </Window>
