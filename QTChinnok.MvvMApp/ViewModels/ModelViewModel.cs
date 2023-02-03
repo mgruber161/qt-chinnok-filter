@@ -7,8 +7,6 @@ using System.Windows.Input;
 
 namespace QTChinnok.MvvMApp.ViewModels
 {
-    using TGenre = Models.Genre;
-
     public abstract partial class ModelViewModel<TModel, TEntity> : BaseViewModel
         where TModel : Models.ModelObject, new()
         where TEntity : Logic.Models.ModelObject, new()

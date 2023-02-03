@@ -1,441 +1,263 @@
 ﻿//@CodeCopy
 //MdStart
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Avalonia.Controls;
+using QTChinnok.Logic.Contracts;
 using QTChinnok.MvvMApp.Views;
 
 namespace QTChinnok.MvvMApp.ViewModels
 {
-    using TGenre = Models.Genre;
-    using TArtist = Models.Artist;
-    using TMediaType = Models.MediaType;
-    using TAlbum = Models.Album;
-    using TTrack = Models.Track;
-    public class MainViewModel : BaseViewModel
+    using TGenreEntity = Logic.Models.Base.Genre;
+    using TGenreModel = Models.Genre;
+
+    using TMediaTypeEntity = Logic.Models.Base.MediaType;
+    using TMediaTypeModel = Models.MediaType;
+
+    using TArtistEntity = Logic.Models.Base.Artist;
+    using TArtistModel = Models.Artist;
+
+    using TAlbumEntity = Logic.Models.App.Album;
+    using TAlbumModel = Models.Album;
+
+    using TTrackEntity = Logic.Models.App.Track;
+    using TTrackModel = Models.Track;
+    public partial class MainViewModel : BaseViewModel
     {
+        class GenresViewModel : DelegateViewModel<TGenreModel, TGenreEntity>
+        {
+            protected override ModelView<TGenreModel, TGenreEntity>? ModelView
+            {
+                get => new GenreWindow();
+            }
+            protected override Func<TGenreEntity, TGenreModel> ConvertTo
+            {
+                get => (e) => new TGenreModel(e);
+            }
+            protected override Predicate<TGenreEntity> LoadPredicate
+            {
+                get => (e) => e.Name != null && e.Name.Contains(ModelFilter, StringComparison.CurrentCultureIgnoreCase);
+            }
+
+            public GenresViewModel(BaseViewModel otherViewModel)
+                : base(otherViewModel)
+            {
+            }
+
+            public override IDataAccess<TGenreEntity> CreateController()
+            {
+                return new Logic.Controllers.Base.GenresController();
+            }
+        }
+        class MediaTypesViewModel : DelegateViewModel<TMediaTypeModel, TMediaTypeEntity>
+        {
+            protected override ModelView<TMediaTypeModel, TMediaTypeEntity>? ModelView => new MediaTypeWindow();
+            protected override Func<TMediaTypeEntity, TMediaTypeModel> ConvertTo => (e) => new TMediaTypeModel(e);
+            protected override Predicate<TMediaTypeEntity> LoadPredicate => e => e.Name != null && e.Name.Contains(ModelFilter, StringComparison.CurrentCultureIgnoreCase);
+
+            public MediaTypesViewModel(BaseViewModel otherViewModel)
+                : base(otherViewModel)
+            {
+            }
+
+            public override IDataAccess<TMediaTypeEntity> CreateController()
+            {
+                return new Logic.Controllers.Base.MediaTypesController();
+            }
+        }
+        class ArtistsViewModel : DelegateViewModel<TArtistModel, TArtistEntity>
+        {
+            protected override ModelView<TArtistModel, TArtistEntity>? ModelView => new ArtistWindow();
+            protected override Func<TArtistEntity, TArtistModel> ConvertTo => e => new TArtistModel(e);
+            protected override Predicate<TArtistEntity> LoadPredicate => e => e.Name != null && e.Name.Contains(ModelFilter, StringComparison.CurrentCultureIgnoreCase);
+
+            public ArtistsViewModel(BaseViewModel otherViewModel)
+                : base(otherViewModel)
+            {
+            }
+
+            public override IDataAccess<TArtistEntity> CreateController()
+            {
+                return new Logic.Controllers.Base.ArtistsController();
+            }
+        }
+        class AlbumsViewModel : DelegateViewModel<TAlbumModel, TAlbumEntity>
+        {
+            protected override ModelView<TAlbumModel, TAlbumEntity>? ModelView => new AlbumWindow();
+            protected override Func<TAlbumEntity, TAlbumModel> ConvertTo => e => new TAlbumModel(e);
+            protected override Predicate<TAlbumEntity> LoadPredicate => e => e.Title != null && e.Title.Contains(ModelFilter, StringComparison.CurrentCultureIgnoreCase);
+
+            public AlbumsViewModel(BaseViewModel otherViewModel) : base(otherViewModel)
+            {
+            }
+
+            public override IDataAccess<TAlbumEntity> CreateController()
+            {
+                return new Logic.Controllers.App.AlbumsController();
+            }
+        }
+        class TracksViewModel : DelegateViewModel<TTrackModel, TTrackEntity>
+        {
+            protected override ModelView<TTrackModel, TTrackEntity>? ModelView => new TrackWindow();
+            protected override Func<TTrackEntity, TTrackModel> ConvertTo => e => new TTrackModel(e);
+            protected override Predicate<TTrackEntity> LoadPredicate => e => e.Composer != null && e.Composer.Contains(ModelFilter, StringComparison.CurrentCultureIgnoreCase);
+
+            public TracksViewModel(BaseViewModel otherViewModel) : base(otherViewModel)
+            {
+            }
+
+            public override IDataAccess<TTrackEntity> CreateController()
+            {
+                return new Logic.Controllers.App.TracksController();
+            }
+        }
         #region fields
-        private string genreFilter = string.Empty;
-        private string mediaTypeFilter = string.Empty;
-        private string artistFilter = string.Empty;
-        private string albumFilter = string.Empty;
-        private string trackFilter = string.Empty;
-        private string musicCollectionFilter = string.Empty;
-
-        private List<TGenre> _genres = new();
-        private List<TMediaType> _mediaTypes = new();
-        private List<TArtist> _artists = new();
-        private List<TAlbum> _albums = new();
-        private List<TTrack> _tracks = new();
-        private TGenre? _selectedGenre;
-        private TMediaType? _selectedMediaType;
-        private TArtist? _selectedArtist;
-        private TAlbum? _selectedAlbum;
-        private TTrack? _selectedTrack;
-
+        private GenresViewModel _genresViewModel;
+        private MediaTypesViewModel _mediaTypesViewModel;
+        private ArtistsViewModel _artistsViewModel;
+        private AlbumsViewModel _albumsViewModel;
+        private TracksViewModel _tracksViewModel;
         #endregion fields
 
         #region properties
-        public TGenre[] Genres => _genres.ToArray();
-        public TArtist[] Artists => _artists.ToArray();
-        public TAlbum[] Albums => _albums.ToArray();
-        public TTrack[] Tracks => _tracks.ToArray();
-        public TMediaType[] MediaTypes => _mediaTypes.ToArray();
+        public TGenreModel[] Genres => _genresViewModel.Models;
+        public TMediaTypeModel[] MediaTypes => _mediaTypesViewModel.Models;
+        public TArtistModel[] Artists => _artistsViewModel.Models;
+        public TAlbumModel[] Albums => _albumsViewModel.Models;
+        public TTrackModel[] Tracks => _tracksViewModel.Models;
 
         public string GenreFilter
         {
-            get => genreFilter;
+            get => _genresViewModel.ModelFilter;
             set
             {
-                genreFilter = value;
-                OnPropertyChanged(nameof(Genres));
+                _genresViewModel.ModelFilter = value;
             }
         }
         public string MediaTypeFilter
         {
-            get => mediaTypeFilter;
+            get => _mediaTypesViewModel.ModelFilter;
             set
             {
-                mediaTypeFilter = value;
-                OnPropertyChanged(nameof(MediaTypes));
+                _mediaTypesViewModel.ModelFilter = value;
             }
         }
         public string ArtistFilter
         {
-            get => artistFilter;
+            get => _artistsViewModel.ModelFilter;
             set
             {
-                artistFilter = value;
-                OnPropertyChanged(nameof(Artists));
+                _artistsViewModel.ModelFilter = value;
             }
         }
         public string AlbumFilter
         {
-            get => albumFilter;
+            get => _albumsViewModel.ModelFilter;
             set
             {
-                albumFilter = value;
-                OnPropertyChanged(nameof(Albums));
+                _albumsViewModel.ModelFilter = value;
             }
         }
         public string TrackFilter
         {
-            get => trackFilter;
+            get => _tracksViewModel.ModelFilter;
             set
             {
-                trackFilter = value;
-                OnPropertyChanged(nameof(Tracks));
+                _tracksViewModel.ModelFilter = value;
             }
         }
 
-        public TGenre? SelectedGenre
+        public TGenreModel? SelectedGenre
         {
-            get => _selectedGenre;
+            get => _genresViewModel.SelectedModel;
             set
             {
-                _selectedGenre = value;
-                OnPropertyChanged(nameof(CommandEditGenre));
-                OnPropertyChanged(nameof(CommandDeleteGenre));
-             }
-        }
-
-        public TMediaType? SelectedMediaType
-        {
-            get => _selectedMediaType;
-            set
-            {
-                _selectedMediaType = value;
-                OnPropertyChanged(nameof(CommandEditMediaType));
-                OnPropertyChanged(nameof(CommandDeleteMediaType));
+                _genresViewModel.SelectedModel = value;
             }
         }
-
-        public TAlbum? SelectedAlbum
+        public TMediaTypeModel? SelectedMediaType
         {
-            get => _selectedAlbum;
+            get => _mediaTypesViewModel.SelectedModel;
             set
             {
-                _selectedAlbum = value;
-                OnPropertyChanged(nameof(CommandEditAlbum));
-                OnPropertyChanged(nameof(CommandDeleteAlbum));
+                _mediaTypesViewModel.SelectedModel = value;
             }
         }
-
-        public TArtist? SelectedArtist
+        public TArtistModel? SelectedArtist
         {
-            get => _selectedArtist;
+            get => _artistsViewModel.SelectedModel;
             set
             {
-                _selectedArtist = value;
-                OnPropertyChanged(nameof(CommandEditArtist));
-                OnPropertyChanged(nameof(CommandDeleteArtist));
+                _artistsViewModel.SelectedModel = value;
             }
         }
-
-        public TTrack? SelectedTrack
+        public TAlbumModel? SelectedAlbum
         {
-            get => _selectedTrack;
+            get => _albumsViewModel.SelectedModel;
             set
             {
-                _selectedTrack = value;
-//                OnPropertyChanged(nameof(CommandEditTrack));
-//                OnPropertyChanged(nameof(CommandDeleteTrack));
+                _albumsViewModel.SelectedModel = value;
             }
         }
-
+        public TTrackModel? SelectedTrack
+        {
+            get => _tracksViewModel.SelectedModel;
+            set
+            {
+                _tracksViewModel.SelectedModel = value;
+            }
+        }
         #endregion properties
 
         #region commands
-        public ICommand CommandAddGenre => RelayCommand.Create((p) => AddGenre());
-        public ICommand CommandEditGenre => RelayCommand.Create(p  => EditGenre(), p => SelectedGenre != null);
-        public ICommand CommandDeleteGenre => RelayCommand.Create(p => DeleteGenre(), p => SelectedGenre != null);
+        public ICommand CommandAddGenre => _genresViewModel.CommandAddModel;
+        public ICommand CommandEditGenre => _genresViewModel.CommandEditModel;
+        public ICommand CommandDeleteGenre => _genresViewModel.CommandDeleteModel;
 
-        public ICommand CommandAddMediaType => RelayCommand.Create(p => AddMediaType());
-        public ICommand CommandEditMediaType => RelayCommand.Create(p => EditMediaType(), p => SelectedMediaType != null);
-        public ICommand CommandDeleteMediaType => RelayCommand.Create(p => DeleteMediaType(), p => SelectedMediaType != null);
+        public ICommand CommandAddMediaType => _mediaTypesViewModel.CommandAddModel;
+        public ICommand CommandEditMediaType => _mediaTypesViewModel.CommandEditModel;
+        public ICommand CommandDeleteMediaType => _mediaTypesViewModel.CommandDeleteModel;
 
-        public ICommand CommandAddArtist => RelayCommand.Create((p) => AddArtist());
-        public ICommand CommandEditArtist => RelayCommand.Create(p => EditArtist(), p => SelectedArtist != null);
-        public ICommand CommandDeleteArtist => RelayCommand.Create(p => DeleteArtist(), p => SelectedArtist != null);
+        public ICommand CommandAddArtist => _artistsViewModel.CommandAddModel;
+        public ICommand CommandEditArtist => _artistsViewModel.CommandEditModel;
+        public ICommand CommandDeleteArtist => _artistsViewModel.CommandDeleteModel;
 
-        public ICommand CommandAddAlbum => RelayCommand.Create(p => AddAlbum());
-        public ICommand CommandEditAlbum => RelayCommand.Create(p => EditAlbum(), p => SelectedAlbum != null);
-        public ICommand CommandDeleteAlbum => RelayCommand.Create(p => DeleteAlbum(), p => SelectedAlbum != null);
+        public ICommand CommandAddAlbum => _albumsViewModel.CommandAddModel;
+        public ICommand CommandEditAlbum => _albumsViewModel.CommandEditModel;
+        public ICommand CommandDeleteAlbum => _albumsViewModel.CommandDeleteModel;
 
-        public ICommand CommandAddTrack => RelayCommand.Create(p => AddTrack());
+        public ICommand CommandAddTrack => _tracksViewModel.CommandAddModel;
+        public ICommand CommandEditTrack => _tracksViewModel.CommandEditModel;
+        public ICommand CommandDeleteTrack => _tracksViewModel.CommandDeleteModel;
         #endregion commands
 
         public MainViewModel()
         {
-            OnPropertyChanged(nameof(Genres));
-            OnPropertyChanged(nameof(MediaTypes));
-            OnPropertyChanged(nameof(Artists));
-            OnPropertyChanged(nameof(Albums));
-            OnPropertyChanged(nameof(Tracks));
+            _genresViewModel = new(this);
+            _mediaTypesViewModel = new(this);
+            _artistsViewModel = new(this);
+            _albumsViewModel = new(this);
+            _tracksViewModel = new(this);
         }
-        protected override void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        internal override void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
-            if (propertyName == nameof(Genres))
+            var data = propertyName?.Split("_");
+
+            if (data?.Length == 2)
             {
-                Task.Run(LoadGenresAsync);
-            }
-            else if (propertyName == nameof(MediaTypes))
-            {
-                Task.Run(LoadMediaTypesAsync);
-            }
-            else if (propertyName == nameof(Artists))
-            {
-                Task.Run(LoadArtistsAsync);
-            }
-            else if (propertyName == nameof(Albums))
-            {
-                Task.Run(LoadAlbumsAsync);
-            }
-            else if (propertyName == nameof(Tracks))
-            {
-                Task.Run(LoadTracksAsync);
+                var delegatePropName = $"{data[1].Replace("Model", data[0])}";
+
+                base.OnPropertyChanged(delegatePropName);
             }
             else
             {
                 base.OnPropertyChanged(propertyName);
             }
         }
-
-        private async void AddGenre()
-        {
-            GenreWindow window = new();
-
-            await window.ShowDialog(Window);
-            OnPropertyChanged(nameof(Genres));
-        }
-        private async void EditGenre()
-        {
-            GenreWindow window = new();
-
-            window.ViewModel.Model = SelectedGenre!;
-            await window.ShowDialog(Window);
-            OnPropertyChanged(nameof(Genres));
-        }
-        private async void DeleteGenre()
-        {
-            var result = await MessageBox.ShowAsync(Window, $"Soll der Eintrag '{SelectedGenre?.Name}' gelöscht werden?", "Löschen", MessageBox.MessageBoxButtons.YesNo);
-
-            if (result == MessageBox.MessageBoxResult.Yes)
-            {
-                bool error = false;
-                string errorMessage = string.Empty;
-
-                Task.Run(async () =>
-                {
-                    try
-                    {
-                        using var ctrl = new Logic.Controllers.Base.GenresController();
-
-                        await ctrl.DeleteAsync(SelectedGenre!.Id).ConfigureAwait(false);
-                        await ctrl.SaveChangesAsync().ConfigureAwait(false);
-                    }
-                    catch (System.Exception ex)
-                    {
-                        error = true;
-                        errorMessage = ex.Message;
-                    }
-                }).Wait();
-
-                if (error)
-                {
-                    await MessageBox.ShowAsync(Window, errorMessage, "Löschen", MessageBox.MessageBoxButtons.Ok);
-                }
-                else
-                {
-                    OnPropertyChanged(nameof(Genres));
-                }
-            }
-        }
-
-        private void AddMediaType()
-        {
-        }
-        private void EditMediaType()
-        {
-        }
-        private void DeleteMediaType()
-        {
-        }
-
-        private async void AddArtist()
-        {
-            ArtistWindow window = new();
-
-            await window.ShowDialog(Window);
-            OnPropertyChanged(nameof(Artists));
-        }
-        private async void EditArtist()
-        {
-            ArtistWindow window = new();
-
-            window.ViewModel.Model = SelectedArtist!;
-            await window.ShowDialog(Window);
-            OnPropertyChanged(nameof(Artists));
-        }
-        private async void DeleteArtist()
-        {
-            var result = await MessageBox.ShowAsync(Window, $"Soll der Eintrag '{SelectedArtist?.Name}' gelöscht werden?", "Löschen", MessageBox.MessageBoxButtons.YesNo);
-
-            if (result == MessageBox.MessageBoxResult.Yes)
-            {
-                bool error = false;
-                string errorMessage = string.Empty;
-
-                Task.Run(async () =>
-                {
-                    try
-                    {
-                        using var ctrl = new Logic.Controllers.Base.ArtistsController();
-
-                        await ctrl.DeleteAsync(SelectedGenre!.Id).ConfigureAwait(false);
-                        await ctrl.SaveChangesAsync().ConfigureAwait(false);
-                    }
-                    catch (System.Exception ex)
-                    {
-                        error = true;
-                        errorMessage = ex.Message;
-                    }
-                }).Wait();
-
-                if (error)
-                {
-                    await MessageBox.ShowAsync(Window, errorMessage, "Löschen", MessageBox.MessageBoxButtons.Ok);
-                }
-                else
-                {
-                    OnPropertyChanged(nameof(Genres));
-                }
-            }
-        }
-
-        private void AddAlbum()
-        {
-            //AlbumWindow window = new();
-
-            //window.ShowDialog();
-            //OnPropertyChanged(nameof(Albums));
-        }
-        private void EditAlbum()
-        {
-            //AlbumWindow window = new();
-
-            //window.ViewModel.Model = SelectedAlbum!;
-            //window.ShowDialog();
-            //OnPropertyChanged(nameof(Albums));
-        }
-        private void DeleteAlbum()
-        {
-            //var result = MessageBox.Show($"Soll der Eintrag '{SelectedAlbum?.Title}' gelöscht werden", "Löschen", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            //if (result == MessageBoxResult.Yes)
-            //{
-            //    bool error = false;
-            //    string errorMessage = string.Empty;
-
-            //    Task.Run(async () =>
-            //    {
-            //        try
-            //        {
-            //            using var ctrl = new Logic.Controllers.App.AlbumsController();
-
-            //            await ctrl.DeleteAsync(SelectedAlbum!.Id).ConfigureAwait(false);
-            //            await ctrl.SaveChangesAsync().ConfigureAwait(false);
-            //        }
-            //        catch (System.Exception ex)
-            //        {
-            //            error = true;
-            //            errorMessage = ex.Message;
-            //        }
-            //    }).Wait();
-
-            //    if (error)
-            //    {
-            //        MessageBox.Show(errorMessage, "Löschen", MessageBoxButton.OK, MessageBoxImage.Error);
-            //    }
-            //    else
-            //    {
-            //        OnPropertyChanged(nameof(Albums));
-            //    }
-            //}
-        }
-
-        private void AddTrack()
-        {
-            //TrackWindow window = new();
-
-            //window.ShowDialog();
-            //OnPropertyChanged(nameof(Tracks));
-        }
-
-        private async Task LoadGenresAsync()
-        {
-            using var ctrl = new Logic.Controllers.Base.GenresController();
-            var items = await ctrl.GetAllAsync().ConfigureAwait(false);
-            var result = items.Where(i => i.Name != null && i.Name.Contains(genreFilter, System.StringComparison.CurrentCultureIgnoreCase));
-
-            _genres.Clear();
-            _genres.AddRange(result.Select(i => new TGenre(i)));
-            SelectedGenre = null;
-            base.OnPropertyChanged(nameof(SelectedGenre));
-            base.OnPropertyChanged(nameof(Genres));
-        }
-        private async Task LoadMediaTypesAsync()
-        {
-            using var ctrl = new Logic.Controllers.Base.MediaTypesController();
-            var items = await ctrl.GetAllAsync().ConfigureAwait(false);
-            var result = items.Where(i => i.Name != null && i.Name.Contains(mediaTypeFilter, System.StringComparison.CurrentCultureIgnoreCase));
-
-            _mediaTypes.Clear();
-            _mediaTypes.AddRange(result.Select(i => new TMediaType(i)));
-            SelectedMediaType = null;
-            base.OnPropertyChanged(nameof(SelectedMediaType));
-            base.OnPropertyChanged(nameof(MediaTypes));
-        }
-        private async Task LoadArtistsAsync()
-        {
-            using var ctrl = new Logic.Controllers.Base.ArtistsController();
-            var items = await ctrl.GetAllAsync().ConfigureAwait(false);
-            var result = items.Where(i => i.Name != null && i.Name.Contains(artistFilter, System.StringComparison.CurrentCultureIgnoreCase));
-
-            _artists.Clear();
-            _artists.AddRange(result.Select(i => new TArtist(i)));
-            SelectedArtist = null;
-            base.OnPropertyChanged(nameof(SelectedArtist));
-            base.OnPropertyChanged(nameof(Artists));
-        }
-        private async Task LoadAlbumsAsync()
-        {
-            using var ctrl = new Logic.Controllers.App.AlbumsController();
-            var items = await ctrl.GetAllAsync().ConfigureAwait(false);
-            var result = items.Where(i => i.Title.Contains(albumFilter, System.StringComparison.CurrentCultureIgnoreCase)
-                                       || i.Artist!.Name!.Contains(albumFilter, System.StringComparison.CurrentCultureIgnoreCase));
-
-            _albums.Clear();
-            _albums.AddRange(result.Select(i => new TAlbum(i)));
-            SelectedAlbum = null;
-            base.OnPropertyChanged(nameof(SelectedAlbum));
-            base.OnPropertyChanged(nameof(Albums));
-        }
-        private async Task LoadTracksAsync()
-        {
-            using var ctrl = new Logic.Controllers.App.TracksController();
-            var items = await ctrl.GetAllAsync().ConfigureAwait(false);
-            var result = items.Where(i => i.Name.Contains(trackFilter, System.StringComparison.CurrentCultureIgnoreCase));
-
-            _tracks.Clear();
-            _tracks.AddRange(result.Select(i => new TTrack(i)));
-            SelectedTrack = null;
-            base.OnPropertyChanged(nameof(SelectedTrack));
-            base.OnPropertyChanged(nameof(Tracks));
-        }
-
     }
 }
 //MdEnd

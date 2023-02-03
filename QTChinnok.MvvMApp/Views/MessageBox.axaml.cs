@@ -38,9 +38,9 @@ namespace QTChinnok.MvvMApp.Views
             var buttonPanel = msgbox.FindControl<StackPanel>("Buttons");
             var result = MessageBoxResult.Ok;
 
-            void AddButton(string caption, MessageBoxResult r, bool def = false)
+            void AddButton(string caption, MessageBoxResult r, bool isDefault = false)
             {
-                var btn = new Button { Content = caption, MinWidth = 100 };
+                var btn = new Button { Content = caption, MinWidth = 100, IsDefault = isDefault };
 
                 btn.Click += (_, __) =>
                 {
@@ -48,7 +48,7 @@ namespace QTChinnok.MvvMApp.Views
                     msgbox.Close();
                 };
                 buttonPanel.Children.Add(btn);
-                if (def)
+                if (isDefault)
                     result = r;
             }
 

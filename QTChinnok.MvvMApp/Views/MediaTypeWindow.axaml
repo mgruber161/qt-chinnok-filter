@@ -3,15 +3,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:QTChinnok.MvvMApp.ViewModels"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="QTChinnok.MvvMApp.Views.ArtistWindow"
-        WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="200"
+        x:Class="QTChinnok.MvvMApp.Views.MediaTypeWindow"
+		    WindowStartupLocation="CenterScreen"
 		    Width="600"
 		    Height="200"
-        Title="Artist">
+        Title="Genre">
   <Window.DataContext>
-    <vm:ArtistViewModel></vm:ArtistViewModel>
+    <vm:GenreViewModel x:Name="ViewModel"/>
   </Window.DataContext>
+
   <Grid Margin="10">
     <Grid.RowDefinitions>
       <RowDefinition Height="30"></RowDefinition>
@@ -32,4 +33,5 @@
       <Button Width="150" Command="{Binding Path=CommandClose}" Margin="10">Schließen</Button>
     </StackPanel>
   </Grid>
+
 </Window>

@@ -2,9 +2,8 @@ using Avalonia.Controls;
 
 namespace QTChinnok.MvvMApp.Views
 {
-    public partial class ArtistWindow : Window
+    public partial class ArtistWindow : ModelView<Models.Artist, Logic.Models.Base.Artist>
     {
-        public ViewModels.ArtistViewModel ViewModel { get; private set; }
         public ArtistWindow()
         {
             InitializeComponent();

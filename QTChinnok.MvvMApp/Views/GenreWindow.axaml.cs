@@ -1,10 +1,7 @@
-using Avalonia.Controls;
-
 namespace QTChinnok.MvvMApp.Views
 {
-    public partial class GenreWindow : Window
+    public partial class GenreWindow : ModelView<Models.Genre, Logic.Models.Base.Genre>
     {
-        public ViewModels.GenreViewModel ViewModel { get; private set; }
         public GenreWindow()
         {
             InitializeComponent();

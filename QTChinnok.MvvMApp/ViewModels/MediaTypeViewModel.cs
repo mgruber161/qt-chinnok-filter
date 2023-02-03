@@ -3,10 +3,9 @@ using System.Linq;
 
 namespace QTChinnok.MvvMApp.ViewModels
 {
-    using TModel = Models.Genre;
-    using TEntity = Logic.Models.Base.Genre;
-
-    public class GenreViewModel : ModelViewModel<TModel, TEntity>
+    using TModel = Models.MediaType;
+    using TEntity = Logic.Models.Base.MediaType;
+    public class MediaTypeViewModel : ModelViewModel<TModel, TEntity>
     {
         public string Name
         {
@@ -16,7 +15,7 @@ namespace QTChinnok.MvvMApp.ViewModels
 
         public override IDataAccess<TEntity> CreateController()
         {
-            return new Logic.Controllers.Base.GenresController();
+            return new Logic.Controllers.Base.MediaTypesController();
         }
 
         protected override void OnPropertiesChanged(params string[] propertyNames)

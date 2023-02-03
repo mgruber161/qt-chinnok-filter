@@ -53,4 +53,10 @@
   <ItemGroup>
     <ProjectReference Include="..\QTChinnok.Logic\QTChinnok.Logic.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\MediaTypeWindow.axaml.cs">
+      <DependentUpon>MediaTypeWindow.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>
