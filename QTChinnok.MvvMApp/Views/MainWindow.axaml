@@ -58,7 +58,7 @@
 						<Button Width="100" Command="{Binding Path=CommandEditMediaType}" Margin="10 0 0 0">Bearbeiten</Button>
 						<Button Width="100" Command="{Binding Path=CommandDeleteMediaType}" Background="Red" Foreground="White" Margin="10 0 0 0">Löschen</Button>
 					</StackPanel>
-					<DataGrid Items="{Binding Path=MediaTypes}"
+					<DataGrid Items="{Binding MediaTypes}"
                               SelectedItem="{Binding Path=SelectedMediaType}"
                               VerticalAlignment="Stretch"
                               AutoGenerateColumns="False"

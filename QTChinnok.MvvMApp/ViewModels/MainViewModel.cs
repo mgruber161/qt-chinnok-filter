@@ -1,12 +1,8 @@
-﻿//@CodeCopy
+﻿//@CustomCode
 //MdStart
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using Avalonia.Controls;
 using QTChinnok.Logic.Contracts;
 using QTChinnok.MvvMApp.Views;
 
@@ -28,20 +24,14 @@ namespace QTChinnok.MvvMApp.ViewModels
     using TTrackModel = Models.Track;
     public partial class MainViewModel : BaseViewModel
     {
-        class GenresViewModel : DelegateViewModel<TGenreModel, TGenreEntity>
+        #region delegates
+        private class GenresViewModel : ModelsViewModel<TGenreModel, TGenreEntity>
         {
-            protected override ModelView<TGenreModel, TGenreEntity>? ModelView
-            {
-                get => new GenreWindow();
-            }
-            protected override Func<TGenreEntity, TGenreModel> ConvertTo
-            {
-                get => (e) => new TGenreModel(e);
-            }
-            protected override Predicate<TGenreEntity> LoadPredicate
-            {
-                get => (e) => e.Name != null && e.Name.Contains(ModelFilter, StringComparison.CurrentCultureIgnoreCase);
-            }
+            protected override ModelView<TGenreModel, TGenreEntity>? ModelView => new GenreWindow();
+
+            protected override Func<TGenreEntity, TGenreModel> ConvertTo => (e) => new TGenreModel(e);
+
+            protected override Predicate<TGenreEntity> LoadPredicate => (e) => e.Name != null && e.Name.Contains(ModelFilter, StringComparison.CurrentCultureIgnoreCase);
 
             public GenresViewModel(BaseViewModel otherViewModel)
                 : base(otherViewModel)
@@ -53,7 +43,7 @@ namespace QTChinnok.MvvMApp.ViewModels
                 return new Logic.Controllers.Base.GenresController();
             }
         }
-        class MediaTypesViewModel : DelegateViewModel<TMediaTypeModel, TMediaTypeEntity>
+        private class MediaTypesViewModel : ModelsViewModel<TMediaTypeModel, TMediaTypeEntity>
         {
             protected override ModelView<TMediaTypeModel, TMediaTypeEntity>? ModelView => new MediaTypeWindow();
             protected override Func<TMediaTypeEntity, TMediaTypeModel> ConvertTo => (e) => new TMediaTypeModel(e);
@@ -69,7 +59,7 @@ namespace QTChinnok.MvvMApp.ViewModels
                 return new Logic.Controllers.Base.MediaTypesController();
             }
         }
-        class ArtistsViewModel : DelegateViewModel<TArtistModel, TArtistEntity>
+        private class ArtistsViewModel : ModelsViewModel<TArtistModel, TArtistEntity>
         {
             protected override ModelView<TArtistModel, TArtistEntity>? ModelView => new ArtistWindow();
             protected override Func<TArtistEntity, TArtistModel> ConvertTo => e => new TArtistModel(e);
@@ -85,7 +75,7 @@ namespace QTChinnok.MvvMApp.ViewModels
                 return new Logic.Controllers.Base.ArtistsController();
             }
         }
-        class AlbumsViewModel : DelegateViewModel<TAlbumModel, TAlbumEntity>
+        private class AlbumsViewModel : ModelsViewModel<TAlbumModel, TAlbumEntity>
         {
             protected override ModelView<TAlbumModel, TAlbumEntity>? ModelView => new AlbumWindow();
             protected override Func<TAlbumEntity, TAlbumModel> ConvertTo => e => new TAlbumModel(e);
@@ -100,7 +90,7 @@ namespace QTChinnok.MvvMApp.ViewModels
                 return new Logic.Controllers.App.AlbumsController();
             }
         }
-        class TracksViewModel : DelegateViewModel<TTrackModel, TTrackEntity>
+        private class TracksViewModel : ModelsViewModel<TTrackModel, TTrackEntity>
         {
             protected override ModelView<TTrackModel, TTrackEntity>? ModelView => new TrackWindow();
             protected override Func<TTrackEntity, TTrackModel> ConvertTo => e => new TTrackModel(e);
@@ -115,15 +105,18 @@ namespace QTChinnok.MvvMApp.ViewModels
                 return new Logic.Controllers.App.TracksController();
             }
         }
+        #endregion delegates
+      
         #region fields
-        private GenresViewModel _genresViewModel;
-        private MediaTypesViewModel _mediaTypesViewModel;
-        private ArtistsViewModel _artistsViewModel;
-        private AlbumsViewModel _albumsViewModel;
-        private TracksViewModel _tracksViewModel;
+        private readonly GenresViewModel _genresViewModel;
+        private readonly MediaTypesViewModel _mediaTypesViewModel;
+        private readonly ArtistsViewModel _artistsViewModel;
+        private readonly AlbumsViewModel _albumsViewModel;
+        private readonly TracksViewModel _tracksViewModel;
         #endregion fields
 
         #region properties
+
         public TGenreModel[] Genres => _genresViewModel.Models;
         public TMediaTypeModel[] MediaTypes => _mediaTypesViewModel.Models;
         public TArtistModel[] Artists => _artistsViewModel.Models;
@@ -133,83 +126,53 @@ namespace QTChinnok.MvvMApp.ViewModels
         public string GenreFilter
         {
             get => _genresViewModel.ModelFilter;
-            set
-            {
-                _genresViewModel.ModelFilter = value;
-            }
+            set => _genresViewModel.ModelFilter = value;
         }
         public string MediaTypeFilter
         {
             get => _mediaTypesViewModel.ModelFilter;
-            set
-            {
-                _mediaTypesViewModel.ModelFilter = value;
-            }
+            set => _mediaTypesViewModel.ModelFilter = value;
         }
         public string ArtistFilter
         {
             get => _artistsViewModel.ModelFilter;
-            set
-            {
-                _artistsViewModel.ModelFilter = value;
-            }
+            set => _artistsViewModel.ModelFilter = value;
         }
         public string AlbumFilter
         {
             get => _albumsViewModel.ModelFilter;
-            set
-            {
-                _albumsViewModel.ModelFilter = value;
-            }
+            set => _albumsViewModel.ModelFilter = value;
         }
         public string TrackFilter
         {
             get => _tracksViewModel.ModelFilter;
-            set
-            {
-                _tracksViewModel.ModelFilter = value;
-            }
+            set => _tracksViewModel.ModelFilter = value;
         }
 
         public TGenreModel? SelectedGenre
         {
             get => _genresViewModel.SelectedModel;
-            set
-            {
-                _genresViewModel.SelectedModel = value;
-            }
+            set => _genresViewModel.SelectedModel = value;
         }
         public TMediaTypeModel? SelectedMediaType
         {
             get => _mediaTypesViewModel.SelectedModel;
-            set
-            {
-                _mediaTypesViewModel.SelectedModel = value;
-            }
+            set => _mediaTypesViewModel.SelectedModel = value;
         }
         public TArtistModel? SelectedArtist
         {
             get => _artistsViewModel.SelectedModel;
-            set
-            {
-                _artistsViewModel.SelectedModel = value;
-            }
+            set => _artistsViewModel.SelectedModel = value;
         }
         public TAlbumModel? SelectedAlbum
         {
             get => _albumsViewModel.SelectedModel;
-            set
-            {
-                _albumsViewModel.SelectedModel = value;
-            }
+            set => _albumsViewModel.SelectedModel = value;
         }
         public TTrackModel? SelectedTrack
         {
             get => _tracksViewModel.SelectedModel;
-            set
-            {
-                _tracksViewModel.SelectedModel = value;
-            }
+            set => _tracksViewModel.SelectedModel = value;
         }
         #endregion properties
 
@@ -237,11 +200,11 @@ namespace QTChinnok.MvvMApp.ViewModels
 
         public MainViewModel()
         {
-            _genresViewModel = new(this);
-            _mediaTypesViewModel = new(this);
-            _artistsViewModel = new(this);
-            _albumsViewModel = new(this);
-            _tracksViewModel = new(this);
+            _genresViewModel = new GenresViewModel(this);
+            _mediaTypesViewModel = new MediaTypesViewModel(this);
+            _artistsViewModel = new ArtistsViewModel(this);
+            _albumsViewModel = new AlbumsViewModel(this);
+            _tracksViewModel = new TracksViewModel(this);
         }
         internal override void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {

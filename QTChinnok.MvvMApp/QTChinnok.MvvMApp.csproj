@@ -58,5 +58,10 @@
     <Compile Update="Views\MediaTypeWindow.axaml.cs">
       <DependentUpon>MediaTypeWindow.axaml</DependentUpon>
     </Compile>
+    <Compile Remove="Views\ModelsView.axaml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AvaloniaXaml Remove="Views\ModelsView.axaml" />
   </ItemGroup>
 </Project>
