@@ -165,12 +165,7 @@ namespace QTChinnok.WpfApp.ViewModels
                             dbEntity.Albums.Clear();
                             foreach (var item in _albums)
                             {
-                                var album = await albumCtrl.GetByIdAsync(item.Id).ConfigureAwait(false);
-
-                                if (album != null)
-                                {
-                                    dbEntity.Albums.Add(album);
-                                }
+                                dbEntity.Albums.Add(new Logic.Models.App.Album { Id = item.Id });
                             }
                             dbEntity = await mcCtrl.UpdateAsync(dbEntity).ConfigureAwait(false);
                             await mcCtrl.SaveChangesAsync().ConfigureAwait(false);
@@ -181,14 +176,10 @@ namespace QTChinnok.WpfApp.ViewModels
                     {
                         var dbEntity = mcCtrl.Create();
 
+                        dbEntity.CopyFrom(this);
                         foreach (var item in _albums)
                         {
-                            var album = await albumCtrl.GetByIdAsync(item.Id).ConfigureAwait(false);
-
-                            if (album != null)
-                            {
-                                dbEntity.Albums.Add(album);
-                            }
+                            dbEntity.Albums.Add(new Logic.Models.App.Album { Id = item.Id });
                         }
                         dbEntity = await mcCtrl.InsertAsync(dbEntity).ConfigureAwait(false);
                         await mcCtrl.SaveChangesAsync().ConfigureAwait(false);

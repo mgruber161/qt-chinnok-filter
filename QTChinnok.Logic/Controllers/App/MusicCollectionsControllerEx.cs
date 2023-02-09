@@ -9,7 +9,10 @@ namespace QTChinnok.Logic.Controllers.App
         {
             var albums = await QueryAlbums(entity).ToArrayAsync().ConfigureAwait(false);
 
-            entity.Albums.Clear();
+            foreach (var item in entity.Albums.Where(e => e.Id > 0).ToArray())
+            {
+                entity.Albums.Remove(item);
+            }
             entity.Albums.AddRange(albums);
 
             return await base.ExecuteInsertAsync(entity).ConfigureAwait(false);
@@ -18,7 +21,10 @@ namespace QTChinnok.Logic.Controllers.App
         {
             var albums = QueryAlbums(entity).ToArray();
 
-            entity.Albums.Clear();
+            foreach (var item in entity.Albums.Where(e => e.Id > 0).ToArray())
+            {
+                entity.Albums.Remove(item);
+            }
             entity.Albums.AddRange(albums);
 
             return base.ExecuteUpdate(entity);
@@ -26,7 +32,7 @@ namespace QTChinnok.Logic.Controllers.App
         private IQueryable<Entities.App.Album> QueryAlbums(Entities.App.MusicCollection entity)
         {
             using var albumCtrl = new AlbumsController(this);
-            var albumIds = entity.Albums.Select(a => a.Id);
+            var albumIds = entity.Albums.Where(e => e.Id > 0).Select(a => a.Id);
             var query = albumCtrl.EntitySet.AsQueryable();
 
             return query.Where(e => albumIds.Contains(e.Id));

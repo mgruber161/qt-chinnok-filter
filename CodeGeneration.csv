@@ -32,7 +32,7 @@ AspMvc;FilterModel;Account.Role;Generate;True
 AspMvc;FilterModel;Account.User;Generate;True
 AspMvc;Controller;All;Generate;True
 AspMvc;Service;All;Generate;True
-AspMvc;View;All;Generate;True
+AspMvc;View;All;Generate;False
 AspMvc;AddServices;All;Generate;True
 
 AspMvc;ViewTableProperty;AccessRule.RelationshipEntityType;Generate;False
