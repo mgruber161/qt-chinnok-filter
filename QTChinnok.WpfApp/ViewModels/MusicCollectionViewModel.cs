@@ -181,7 +181,6 @@ namespace QTChinnok.WpfApp.ViewModels
                     {
                         var dbEntity = mcCtrl.Create();
 
-                        dbEntity.CopyFrom(this);
                         foreach (var item in _albums)
                         {
                             var album = await albumCtrl.GetByIdAsync(item.Id).ConfigureAwait(false);

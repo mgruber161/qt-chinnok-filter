@@ -357,9 +357,17 @@ namespace QTChinnok.WpfApp.ViewModels
                     try
                     {
                         using var ctrl = new Logic.Controllers.App.MusicCollectionsController();
+                        var entity = await ctrl.GetByIdAsync(SelectedMusicCollection!.Id).ConfigureAwait(false);
 
-                        await ctrl.DeleteAsync(SelectedMusicCollection!.Id).ConfigureAwait(false);
-                        await ctrl.SaveChangesAsync().ConfigureAwait(false);
+                        if (entity != null)
+                        {
+                            entity!.Albums.Clear();
+                            await ctrl.UpdateAsync(entity).ConfigureAwait(false);
+                            await ctrl.SaveChangesAsync().ConfigureAwait(false);
+
+                            await ctrl.DeleteAsync(SelectedMusicCollection!.Id).ConfigureAwait(false);
+                            await ctrl.SaveChangesAsync().ConfigureAwait(false);
+                        }
                     }
                     catch (System.Exception ex)
                     {
