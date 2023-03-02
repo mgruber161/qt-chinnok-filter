@@ -24,7 +24,7 @@ WebApi;Controller;Company;Generate;True
 
 WebApi;Property;App.EntityType.EntityTypeId;Attributes;System.Text.Json.Serialization.JsonIgnore
 
-AspMvc;All;All;Generate;True
+AspMvc;All;All;Generate;False
 AspMvc;Model;All;Generate;True
 AspMvc;FilterModel;All;Generate;True
 AspMvc;FilterModel;Account.Identity;Generate;True
