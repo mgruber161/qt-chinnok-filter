@@ -3,7 +3,9 @@
 #if ACCOUNT_ON
 namespace QTChinnok.Logic.Contracts.Account
 {
-    public partial interface ILoginSessionsAccess<T> : IDataAccess<T>
+    using TOutModel = Models.Account.LoginSession;
+
+    public partial interface ILoginSessionsAccess : IDataAccess<TOutModel>
     {
     }
 }

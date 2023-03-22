@@ -4,6 +4,7 @@
 namespace QTChinnok.Logic.Contracts.Account
 {
     using QTChinnok.Logic.Modules.Common;
+
     public partial interface IIdentity
     {
         IdType Id { get; }

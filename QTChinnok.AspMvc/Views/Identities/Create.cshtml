@@ -1,11 +1,11 @@
-@*@CodeCopy*@
+﻿@*@CodeCopy*@
 @*#if ACCOUNT_ON*@@*
-@{
-    @using Microsoft.AspNetCore.Mvc.Rendering
-    @using QTChinnok.AspMvc.Models.View
-    @using QTChinnok.AspMvc.Modules.Session
-    @model QTChinnok.AspMvc.Models.Account.IdentityCreate
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using QTChinnok.AspMvc.Models.View
+@using QTChinnok.AspMvc.Modules.Session
+@model QTChinnok.AspMvc.Models.Account.IdentityCreate
 
+@{
     var sessionWrapper = new SessionWrapper(Context.Session);
     var controller = ViewContext.RouteData?.Values["controller"]?.ToString() ?? string.Empty;
     var action = ViewContext.RouteData?.Values["action"]?.ToString() ?? string.Empty;

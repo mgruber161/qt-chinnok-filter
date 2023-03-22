@@ -32,7 +32,7 @@ namespace QTChinnok.WpfApp.ViewModels
         {
             get
             {
-                return RelayCommand.CreateCommand(ref cmdSave, p =>
+                return RelayCommand.Create(ref cmdSave, p =>
                 {
                     Save();
                 },
@@ -43,7 +43,7 @@ namespace QTChinnok.WpfApp.ViewModels
         {
             get
             {
-                return RelayCommand.CreateCommand(ref cmdClose, p =>
+                return RelayCommand.Create(ref cmdClose, p =>
                 {
                     Close();
                 },
@@ -55,7 +55,7 @@ namespace QTChinnok.WpfApp.ViewModels
         {
             get
             {
-                return RelayCommand.CreateCommand(ref _cmdAddAlbum, p =>
+                return RelayCommand.Create(ref _cmdAddAlbum, p =>
                 {
                     AddAlbum(Model, SelectedAddAlbum!);
                     OnPropertiesChanged();
@@ -67,7 +67,7 @@ namespace QTChinnok.WpfApp.ViewModels
         {
             get
             {
-                return RelayCommand.CreateCommand(ref _cmdRemoveAlbum, p =>
+                return RelayCommand.Create(ref _cmdRemoveAlbum, p =>
                 {
                     RemoveMember(Model, SelectedAlbum!);
                     OnPropertiesChanged();

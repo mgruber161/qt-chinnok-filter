@@ -1,4 +1,4 @@
-@*@CodeCopy*@
+﻿@*@CodeCopy*@
 @using QTChinnok.AspMvc.Modules.Session
 @{
     var sessionWrapper = new SessionWrapper(Context.Session);
@@ -7,14 +7,11 @@
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">@("Home")</a>
         </li>
-@*#if ACCOUNT_ON*@@*
+        @*#if ACCOUNT_ON*@@*
         @if (sessionWrapper.LoginSession != null)
         {
         }
 *@@*#endif*@
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Genres" asp-action="Index">@("Genres")</a>
-        </li>
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Contact">@("Contact")</a>
         </li>

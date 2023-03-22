@@ -4,6 +4,7 @@
 namespace QTChinnok.Logic.Contracts.Account
 {
     using QTChinnok.Logic.Entities.Account;
+
     public partial interface IIdentityXRole
     {
         IdType IdentityId { get; set; }

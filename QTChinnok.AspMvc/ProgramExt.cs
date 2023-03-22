@@ -18,9 +18,6 @@ namespace QTChinnok.AspMvc
             builder.Services.AddTransient<Logic.Contracts.Account.IUsersAccess<Logic.Models.Account.User>, Logic.Facades.Account.UsersFacade>();
             builder.Services.AddTransient<Logic.Contracts.Account.IIdentitiesAccess<Logic.Models.Account.Identity>, Logic.Facades.Account.IdentitiesFacade>();
 #endif
-
-            builder.Services.AddTransient<IGenre, Logic.Controllers.Base.GenresController>();
-
             AddServices(builder);
         }
         /// <summary>

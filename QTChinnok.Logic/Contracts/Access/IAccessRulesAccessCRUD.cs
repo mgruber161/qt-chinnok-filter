@@ -4,7 +4,8 @@
 namespace QTChinnok.Logic.Contracts.Access
 {
     using QTChinnok.Logic.Contracts.Account;
-    public partial interface IAccessRulesAccess<T>
+
+    public partial interface IAccessRulesAccess
     {
         Task<bool> CanBeCreatedAsync(Type type, IIdentity identity);
         Task<bool> CanBeReadAsync(IIdentifyable item, IIdentity identity);

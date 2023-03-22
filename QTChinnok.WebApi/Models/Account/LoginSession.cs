@@ -6,7 +6,7 @@ namespace QTChinnok.WebApi.Models.Account
     /// <summary>
     /// This model represents a login session.
     /// </summary>
-    public class LoginSession
+    public partial class LoginSession
     {
         /// <summary>
         /// Gets the property data.

@@ -13,9 +13,7 @@ namespace QTChinnok.Logic.Entities.Account
     [Index(nameof(Designation), IsUnique = true)]
     public partial class Role : VersionExtendedEntity, IRole
     {
-#if GUID_OFF
         public Guid Guid { get; internal set; }
-#endif
         [MaxLength(64)]
         public string Designation { get; set; } = string.Empty;
         [MaxLength(256)]

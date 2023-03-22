@@ -1,4 +1,4 @@
-﻿global using IGenre = QTChinnok.Logic.Contracts.Base.IGenresAccess<QTChinnok.Logic.Models.Base.Genre>;
+﻿global using IGenre = QTChinnok.Logic.Contracts.Base.IGenresAccess;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

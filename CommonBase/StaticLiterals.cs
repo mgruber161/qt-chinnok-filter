@@ -23,6 +23,7 @@ namespace CommonBase
                 ".AspMvc",
                 ".AngularApp",
                 ".WpfApp",
+                ".MvvMApp",
             };
             SolutionToolProjects = new[]
             {
@@ -45,7 +46,7 @@ namespace CommonBase
         public static string GeneratedCodeLabel => "@GeneratedCode";
         public static string CustomizedAndGeneratedCodeLabel => "@CustomAndGeneratedCode";
         public static string IgnoreLabel => "@Ignore";
-        public static string BaseCodeLabel => "@CodeCopy";
+        public static string BaseCodeLabel => "@BaseCode";
         public static string CodeCopyLabel => "@CodeCopy";
         public static string CSharpFileExtension => ".cs";
         public static string SourceFileExtensions => "*.css|*.cs|*.ts|*.cshtml|*.razor|*.razor.cs|*.template";

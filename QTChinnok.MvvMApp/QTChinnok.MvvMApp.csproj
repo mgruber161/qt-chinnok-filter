@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <DefineConstants>ACCOUNT_OFF;DBOPERATION_OFF;ROWVERSION_OFF;IDINT_ON;IDLONG_OFF;IDGUID_OFF;SQLSERVER_OFF;SQLITE_ON;GENERATEDCODE_ON</DefineConstants>
+    <DefineConstants>ACCOUNT_OFF;DBOPERATION_OFF;ROWVERSION_OFF;IDINT_ON;IDLONG_OFF;IDGUID_OFF;SQLSERVER_OFF;SQLITE_ON;GENERATEDCODE_OFF</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -47,7 +47,7 @@
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.18" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.18" />
-    <PackageReference Include="XamlNameReferenceGenerator" Version="1.5.1" />
+    <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
   </ItemGroup>
 
   <ItemGroup>
