@@ -1,4 +1,5 @@
-﻿global using IGenre = QTChinnok.Logic.Contracts.Base.IGenresAccess;
+﻿#if GENERATEDCODE_ON
+global using IGenre = QTChinnok.Logic.Contracts.Base.IGenresAccess;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -124,3 +125,4 @@ namespace QTChinnok.AspMvc.Controllers.Base
         }
     }
 }
+#endif
