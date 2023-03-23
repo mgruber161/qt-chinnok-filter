@@ -1,4 +1,4 @@
-﻿//@CodeCopy
+﻿//@CustomCopy
 //MdStart
 namespace QTChinnok.AspMvc
 {
@@ -18,6 +18,12 @@ namespace QTChinnok.AspMvc
             builder.Services.AddTransient<Logic.Contracts.Account.IUsersAccess<Logic.Models.Account.User>, Logic.Facades.Account.UsersFacade>();
             builder.Services.AddTransient<Logic.Contracts.Account.IIdentitiesAccess<Logic.Models.Account.Identity>, Logic.Facades.Account.IdentitiesFacade>();
 #endif
+
+            builder.Services.AddTransient<Logic.Contracts.App.IMusicCollectionsAccess, 
+                Logic.Controllers.App.MusicCollectionsController>();
+            builder.Services.AddTransient<Logic.Contracts.App.IAlbumsAccess, 
+                Logic.Controllers.App.AlbumsController>();
+
             AddServices(builder);
         }
         /// <summary>
