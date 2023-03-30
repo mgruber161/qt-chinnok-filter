@@ -139,9 +139,16 @@ namespace QTChinnok.AspMvc.Controllers.App
         }
         public async Task<ActionResult> RemoveAlbum(int musicCollectionId, int albumId)
         {
-            await _musicCollectionsAccess.RemoveAlbumAsync(musicCollectionId, albumId);
-            await _musicCollectionsAccess.SaveChangesAsync();
+            var entity = await _musicCollectionsAccess.GetByIdAsync(musicCollectionId);
+            var album = await _albumsAccess.GetByIdAsync(albumId);
 
+            if (entity != null && album != null)
+            {
+                entity.Albums.Remove(album);
+
+                await _musicCollectionsAccess.UpdateAsync(entity);
+                await _musicCollectionsAccess.SaveChangesAsync();
+            }
             return RedirectToAction(nameof(Edit), new { id = musicCollectionId });
         }
         // GET: MusicCollectionsController/Delete/5
