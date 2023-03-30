@@ -1,0 +1,54 @@
+﻿@model IEnumerable<QTChinnok.AspMvc.Models.App.Album>
+
+@{
+    var filterText = ViewBag.FilterText as string ?? string.Empty;
+
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<form asp-action="Filter" method="get">
+    <div class="input-group rounded">
+        <input type="search" name="text" value="@filterText" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+        <button class="input-group-text border-0" id="search-addon" type="submit">
+            <i class="fas fa-search"></i>
+        </button>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Artist!.Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Artist!.Name)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

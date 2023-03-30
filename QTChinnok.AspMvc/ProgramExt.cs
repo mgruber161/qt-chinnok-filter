@@ -23,6 +23,8 @@ namespace QTChinnok.AspMvc
                 Logic.Controllers.App.MusicCollectionsController>();
             builder.Services.AddTransient<Logic.Contracts.App.IAlbumsAccess, 
                 Logic.Controllers.App.AlbumsController>();
+            builder.Services.AddTransient<Logic.Contracts.Base.IArtistsAccess,
+                Logic.Controllers.Base.ArtistsController>();
 
             AddServices(builder);
         }

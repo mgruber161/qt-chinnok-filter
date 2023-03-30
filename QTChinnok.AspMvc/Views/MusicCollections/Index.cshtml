@@ -1,6 +1,8 @@
 ﻿@model IEnumerable<QTChinnok.AspMvc.Models.App.MusicCollection>
 
 @{
+    var filterText = ViewBag.FilterText as string ?? string.Empty;
+
     ViewData["Title"] = "Index";
 }
 
@@ -9,6 +11,16 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<form asp-action="Filter" method="get">
+    <div class="input-group rounded">
+        <input type="search" name="text" value="@filterText" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+        <button class="input-group-text border-0" id="search-addon" type="submit">
+            <i class="fas fa-search"></i>
+        </button>
+    </div>
+</form>
+
 <table class="table">
     <thead>
         <tr>

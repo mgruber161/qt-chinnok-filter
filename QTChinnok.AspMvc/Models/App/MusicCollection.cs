@@ -8,6 +8,11 @@ namespace QTChinnok.AspMvc.Models.App
 
         public List<App.Album> Albums { get; set; } = new();
         public List<App.Album> AddAlbums { get; set; } = new();
+
+        public override string ToString()
+        {
+            return $"{Name}";
+        }
         public static MusicCollection Create(Logic.Models.App.MusicCollection entity)
         {
             return new MusicCollection

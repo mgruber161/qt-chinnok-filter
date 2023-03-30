@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using TModel = QTChinnok.AspMvc.Models.App.MusicCollection;
 
 namespace QTChinnok.AspMvc.Controllers.App
 {
@@ -18,20 +18,33 @@ namespace QTChinnok.AspMvc.Controllers.App
         public async Task<ActionResult> Index()
         {
             var entities = await _musicCollectionsAccess.GetAllAsync();
-            var models = entities.Select(e => Models.App.MusicCollection.Create(e)).ToArray();
+            var models = entities.Select(e => TModel.Create(e)).ToArray();
 
             return View(models);
+        }
+        public async Task<ActionResult> Filter(string text)
+        {
+            var entities = await _musicCollectionsAccess.GetAllAsync();
+            var models = entities.Select(e => TModel.Create(e)).ToArray();
+
+            if (string.IsNullOrEmpty(text) == false)
+            {
+                models = models.Where(m => m.ToString().Contains(text, StringComparison.CurrentCultureIgnoreCase)).ToArray();
+            }
+
+            ViewBag.FilterText = text;
+            return View("Index", models);
         }
 
         // GET: MusicCollectionsController/Details/5
         public async Task<ActionResult> Details(int id)
         {
-            var model = default(Models.App.MusicCollection);
+            var model = default(TModel);
             var entity = await _musicCollectionsAccess.GetByIdAsync(id);
 
             if (entity != null)
             {
-                model = Models.App.MusicCollection.Create(entity);
+                model = TModel.Create(entity);
             }
             return model != null ? View(model) : NotFound();
         }
@@ -41,13 +54,13 @@ namespace QTChinnok.AspMvc.Controllers.App
         {
             var entity = _musicCollectionsAccess.Create();
 
-            return View(Models.App.MusicCollection.Create(entity));
+            return View(TModel.Create(entity));
         }
 
         // POST: MusicCollectionsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Models.App.MusicCollection model)
+        public async Task<ActionResult> Create(TModel model)
         {
             try
             {
@@ -70,7 +83,7 @@ namespace QTChinnok.AspMvc.Controllers.App
         // GET: MusicCollectionsController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            var model = default(Models.App.MusicCollection);
+            var model = default(TModel);
             var entity = await _musicCollectionsAccess.GetByIdAsync(id);
 
             if (entity != null)
@@ -79,7 +92,7 @@ namespace QTChinnok.AspMvc.Controllers.App
                 var albums = await _albumsAccess.GetAllAsync();
                 var addAlbums = albums.Where(a => existIds.Contains(a.Id) == false);
 
-                model = Models.App.MusicCollection.Create(entity);
+                model = TModel.Create(entity);
                 model.AddAlbums = addAlbums.Select(a => Models.App.Album.Create(a)).ToList();
             }
             return model != null ? View(model) : NotFound();
@@ -88,7 +101,7 @@ namespace QTChinnok.AspMvc.Controllers.App
         // POST: MusicCollectionsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int id, Models.App.MusicCollection model)
+        public async Task<ActionResult> Edit(int id, TModel model)
         {
             try
             {
@@ -134,12 +147,12 @@ namespace QTChinnok.AspMvc.Controllers.App
         // GET: MusicCollectionsController/Delete/5
         public async Task<ActionResult> Delete(int id)
         {
-            var model = default(Models.App.MusicCollection);
+            var model = default(TModel);
             var entity = await _musicCollectionsAccess.GetByIdAsync(id);
 
             if (entity != null)
             {
-                model = Models.App.MusicCollection.Create(entity);
+                model = TModel.Create(entity);
             }
             return model != null ? View(model) : RedirectToAction(nameof(Index));
         }
@@ -147,7 +160,7 @@ namespace QTChinnok.AspMvc.Controllers.App
         // POST: MusicCollectionsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int id, Models.App.MusicCollection model)
+        public async Task<ActionResult> Delete(int id, TModel model)
         {
             try
             {
