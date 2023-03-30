@@ -12,7 +12,15 @@ namespace CommonBase.Modules.Collection
         #region Fields
         private readonly List<TInnerModel> _innerList;
         private readonly List<TOutModel> _outerList;
+        
+        private readonly Func<TInnerModel, TOutModel> _toOutModel;
+        private readonly Func<TOutModel, TInnerModel> _toInnerModel;
         #endregion Fields
+
+        #region Properties
+        public Func<TInnerModel, TOutModel> ToOutModel => _toOutModel;
+        public Func<TOutModel, TInnerModel> ToInnerModel => _toInnerModel;
+        #endregion Properties
 
         partial void Constructing();
         partial void Constructed();
@@ -26,6 +34,7 @@ namespace CommonBase.Modules.Collection
             _outerList = innerList.Select(e => _toOutModel(e)).ToList();
             Constructed();
         }
+
         public DelegateList(List<TInnerModel> innerList, Func<TInnerModel, TOutModel> toOutModel)
         {
             Constructing();
@@ -35,7 +44,9 @@ namespace CommonBase.Modules.Collection
             _outerList = innerList.Select(e => _toOutModel(e)).ToList();
             Constructed();
         }
-        public DelegateList(List<TInnerModel> innerList, Func<TInnerModel, TOutModel> toOutModel, Func<TOutModel, TInnerModel> toInnerModel)
+
+        public DelegateList(List<TInnerModel> innerList, Func<TInnerModel, TOutModel> toOutModel,
+            Func<TOutModel, TInnerModel> toInnerModel)
         {
             Constructing();
             _innerList = innerList;
@@ -45,19 +56,22 @@ namespace CommonBase.Modules.Collection
             Constructed();
         }
 
-        public Func<TInnerModel, TOutModel> ToOutModel => _toOutModel;
-        public Func<TOutModel, TInnerModel> ToInnerModel => _toInnerModel;
         #region Implement IList<>
         public TOutModel this[int index]
         {
-            get => _toOutModel(_innerList[index]);
-            set => _outerList[index] = value;
+            get => _outerList[index];
+            set
+            {
+                _outerList[index] = value;
+                _innerList[index] = _toInnerModel(value);
+            }
         }
 
         public int Count => _innerList.Count;
         public bool IsReadOnly => false;
 
         public TOutModel Create() => _toOutModel(new TInnerModel());
+
         public void Add(TOutModel item)
         {
             _innerList.Add(_toInnerModel(item));
@@ -98,8 +112,13 @@ namespace CommonBase.Modules.Collection
 
         public bool Remove(TOutModel item)
         {
-            _innerList.Remove(_toInnerModel(item));
-            return _outerList.Remove(item);
+            var index = _outerList.IndexOf(item);
+
+            if (index >= 0)
+            {
+                RemoveAt(index);
+            }
+            return index >= 0;
         }
 
         public void RemoveAt(int index)
@@ -112,12 +131,10 @@ namespace CommonBase.Modules.Collection
         {
             return GetEnumerator();
         }
+
         #endregion Implement IList<>
 
         #region Helper
-        private Func<TInnerModel, TOutModel> _toOutModel;
-        private Func<TOutModel, TInnerModel> _toInnerModel;
-
         protected virtual TOutModel ToDefaultOutModel(TInnerModel model)
         {
             var result = new TOutModel();
@@ -125,6 +142,7 @@ namespace CommonBase.Modules.Collection
             result.CopyFrom(model);
             return result;
         }
+
         protected virtual TInnerModel ToDefaultInnerModel(TOutModel model)
         {
             var result = new TInnerModel();
