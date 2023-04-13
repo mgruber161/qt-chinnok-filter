@@ -32,7 +32,8 @@ namespace QTChinnok.AspMvc.Controllers.App
             sw.Set<string>(FilterKey, text);
             if (!string.IsNullOrEmpty(text))
             {
-                var entities = await _dataAccess.QueryByAsync(string.Empty, text);
+                var entities = await _dataAccess.QueryAsync($"Title.ToUpper().Contains(\"{text.ToUpper()}\")");
+                //var entities = await _dataAccess.QueryByAsync(string.Empty, text);
                 models = entities.Select(TModel.Create);
             }
             else
