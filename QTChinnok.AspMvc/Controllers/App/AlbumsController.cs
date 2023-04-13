@@ -5,6 +5,8 @@ namespace QTChinnok.AspMvc.Controllers.App
 {
     public class AlbumsController : Controller
     {
+        private const string FilterKey = "AlbumsFilter";
+
         private readonly Logic.Contracts.App.IAlbumsAccess _dataAccess;
         private readonly Logic.Contracts.Base.IArtistsAccess _artistsAccess;
 
@@ -15,12 +17,32 @@ namespace QTChinnok.AspMvc.Controllers.App
         }
 
         // GET: Items
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
-            var entities = await _dataAccess.GetAllAsync();
-            var models = entities.Select(e => TModel.Create(e)).ToArray();
+            var sw = new Modules.Session.SessionWrapper(HttpContext.Session);
+            var filterText = sw.Get<string>(FilterKey);
+            return RedirectToAction(nameof(Filter), new { text = filterText });
+        }
 
-            return View(models);
+        public async Task<ActionResult> Filter(string text)
+        {
+            var models = default(IEnumerable<TModel>);
+            var sw = new Modules.Session.SessionWrapper(HttpContext.Session);
+            ViewBag.FilterText = text;
+            sw.Set<string>(FilterKey, text);
+            if (!string.IsNullOrEmpty(text))
+            {
+                var entities = await _dataAccess.QueryByAsync(string.Empty, text);
+                models = entities.Select(TModel.Create);
+            }
+            else
+            {
+                var entities = await _dataAccess.GetAllAsync();
+                models = entities.Select(TModel.Create);
+            }
+            
+
+            return View(nameof(Index), models);
         }
 
         // GET: Items/Details/5
@@ -139,7 +161,7 @@ namespace QTChinnok.AspMvc.Controllers.App
 
                 return RedirectToAction(nameof(Index));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ViewBag.Error = ex.Message;
                 return View(model);
