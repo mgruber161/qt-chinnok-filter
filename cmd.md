@@ -15,13 +15,13 @@ dotnet tool install --global dotnet-ef
 #### Migration fuer die Logik erstellen
 
 ```code
-dotnet ef migrations add InitDb --startup-project QTChinnok.ConApp --project QTChinnok.AppLogic
+dotnet ef migrations add InitDb --startup-project QTChinnok.ConApp --project QTChinnok.Logic
 ```
 
 ### Update database mit den AppSettings aus der Konsolen-App erstrellen
 
 ```code
-dotnet ef database update --startup-project QTChinnok.ConApp --project QTChinnok.AppLogic
+dotnet ef database update --startup-project QTChinnok.ConApp --project QTChinnok.Logic
 ```
 
 #### Migration fuer den UnitTest erstellen
@@ -33,7 +33,7 @@ dotnet ef migrations add InitDb --startup-project QTChinnok.Logic.UnitTest --pro
 ### Update database mit den AppSettings aus dem UnitTest erstrellen
 
 ```code
-dotnet ef database update --startup-project QTChinnok.Logic.UnitTest --project QTChinnok.AppLogic
+dotnet ef database update --startup-project QTChinnok.Logic.UnitTest --project QTChinnok.Logic
 ```
 
 ## Docker Kommandos

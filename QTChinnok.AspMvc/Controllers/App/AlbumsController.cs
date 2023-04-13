@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using QTChinnok.AspMvc.Modules.Session;
 using TModel = QTChinnok.AspMvc.Models.App.Album;
 
 namespace QTChinnok.AspMvc.Controllers.App
@@ -18,35 +17,10 @@ namespace QTChinnok.AspMvc.Controllers.App
         // GET: Items
         public async Task<ActionResult> Index()
         {
-            var session = new SessionWrapper(HttpContext.Session);
-            var filterText = session.Get<string>("FilterText");
-
-            if (string.IsNullOrEmpty(filterText))
-            {
-                var entities = await _dataAccess.GetAllAsync();
-                var models = entities.Select(e => TModel.Create(e)).ToArray();
-
-                return View(models);
-            }
-            else
-            {
-                return RedirectToAction(nameof(Filter), new { text = filterText });
-            }
-        }
-        public async Task<ActionResult> Filter(string text)
-        {
-            var session = new SessionWrapper(HttpContext.Session);
             var entities = await _dataAccess.GetAllAsync();
             var models = entities.Select(e => TModel.Create(e)).ToArray();
 
-            if (string.IsNullOrEmpty(text) == false)
-            {
-                models = models.Where(m => m.ToString()!.Contains(text, StringComparison.CurrentCultureIgnoreCase)).ToArray();
-            }
-
-            ViewBag.FilterText = text;
-            session.Set<string>("FilterText", text);
-            return View("Index", models);
+            return View(models);
         }
 
         // GET: Items/Details/5
